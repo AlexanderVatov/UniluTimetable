@@ -29,4 +29,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
     implementation 'com.github.thellmund.Android-Week-View:core:4.0.0'
+    //implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.11.0'
+    implementation project(path: ':GuichetEtudiant')
 }
