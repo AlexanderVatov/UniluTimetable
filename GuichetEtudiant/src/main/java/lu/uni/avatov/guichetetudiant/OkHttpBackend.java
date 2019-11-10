@@ -3,7 +3,6 @@ package lu.uni.avatov.guichetetudiant;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.CookieJar;
@@ -104,11 +103,11 @@ public class OkHttpBackend implements GuichetEtudiant.NetworkBackend  {
 	}
 
 	@Override
-	public String post(String urlSuffix, HashMap<String, String> parameters) throws GEError {
+	public String post(String urlSuffix, ParametersMultimap parameters) throws GEError {
 		OkHttpClient client = getClient();
 
 		FormBody.Builder body = new FormBody.Builder();
-		for (HashMap.Entry<String, String> entry : parameters.entrySet()) {
+		for (ParametersMultimap.Entry entry : parameters) {
 			body.add(entry.getKey(), entry.getValue());
 			System.err.println(entry.getKey() + ": " + entry.getValue());
 		}

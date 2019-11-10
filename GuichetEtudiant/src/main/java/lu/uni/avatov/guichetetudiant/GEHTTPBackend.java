@@ -11,7 +11,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +35,10 @@ public class GEHTTPBackend implements GuichetEtudiant.NetworkBackend {
     public String get (URL url) throws GEError {
         try {
 
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            System.out.println("GET Request to: " + url.toString());
+
+
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("GET");
                 Authenticator.setDefault(authenticator);
                 injectCookies(con); //Retrieve stored cookies and add them to the request
@@ -76,16 +78,19 @@ public class GEHTTPBackend implements GuichetEtudiant.NetworkBackend {
         }
     }
 
-    public String post(URL url, HashMap<String, String> parameters) throws GEError {
+    public String post(URL url, ParametersMultimap parameters) throws GEError {
         try {
             //URL-encode params into a single "&"-separated string
             StringBuilder data = new StringBuilder();
-            for (HashMap.Entry<String, String> entry : parameters.entrySet()) {
+            for (ParametersMultimap.Entry entry : parameters) {
                 if (data.length() != 0) data.append('&');
                 data.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
                 data.append("=");
                 data.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
             }
+
+            System.out.println("POST Request to: " + url.toString());
+            System.out.println("Data:\n\"" + data.toString() + "\"\n");
 
             byte[] dataBytes = data.toString().getBytes("UTF-8"); //Bytes to send to server
 
@@ -126,7 +131,7 @@ public class GEHTTPBackend implements GuichetEtudiant.NetworkBackend {
         }
     }
     @Override
-    public String post(String urlSuffix, HashMap<String, String> parameters) throws GEError {
+    public String post(String urlSuffix, ParametersMultimap parameters) throws GEError {
         try {
             return post(new URL(urlPrefix + urlSuffix), parameters);
         }
