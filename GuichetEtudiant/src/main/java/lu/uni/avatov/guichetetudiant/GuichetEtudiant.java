@@ -84,7 +84,7 @@ public class GuichetEtudiant {
         }
     }
 
-    public List<Event> getEvents(Date startDate, Date endDate, List<StudyProgram> studyProgramList) throws GEError {
+    public List<GEEvent> getEvents(Date startDate, Date endDate, List<String> studyProgramIds) throws GEError {
         if (token == null) throw new GEAuthenticationError("No credentials provided!");
 
         //Prepare parameters
@@ -93,12 +93,11 @@ public class GuichetEtudiant {
         requestDateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Luxembourg"));
         DateFormat responseDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         responseDateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Luxembourg"));
-        ArrayList<String> studyProgramIDs = new ArrayList<String>(studyProgramList.size());
-        for (StudyProgram s : studyProgramList) studyProgramIDs.add(s.id);
+
 
         ParametersMultimap parameters = new ParametersMultimap();
-        for (StudyProgram s : studyProgramList)
-            parameters.put("formations", s.id);
+        for (String s : studyProgramIds)
+            parameters.put("formations", s);
         parameters.put("start", requestDateFormat.format(startDate));
         parameters.put("end", requestDateFormat.format(endDate));
         parameters.put("groupFilter", "all");
@@ -116,22 +115,22 @@ public class GuichetEtudiant {
             }
 
             int length = inArray.length();
-            ArrayList<Event> outArray = new ArrayList<Event>(length);
+            ArrayList<GEEvent> outArray = new ArrayList<GEEvent>(length);
             for (int i = 0; i < length; ++i) {
                 JSONObject o = inArray.getJSONObject(i);
-                Event e = new Event();
+                GEEvent e = new GEEvent();
 
                 e.start = responseDateFormat.parse(o.getString("DateDebut"));
                 e.end = responseDateFormat.parse(o.getString("DateFin"));
                 e.id = o.getString("Id");
                 e.subject = o.optString("Cours", "");
                 e.subjectId = o.optString("IdCours", "");
-                e.description = o.optString("Description", "");
+                e.title = o.optString("Title", "");
                 e.lecturer = o.optString("Enseignant", "");
-                e.eventType = o.optString("LibelleType", "");
-                e.isCancelled = o.optBoolean("IsCancelled", false);
+                e.eventType = o.optString("TypeCPE", "");
+                e.isCanceled = o.optBoolean("IsCancelled", false);
                 e.room = o.optString("Local", "");
-                e.mainFormationId = o.optString("IdFormPrincipal", "");
+                e.mainStudyProgramId = o.optString("IdFormPrincipal", "");
 
                 outArray.add(e);
             }
@@ -143,4 +142,11 @@ public class GuichetEtudiant {
             throw new GEError("Guichet Étudiant: Error parsing date:  " + e.getMessage());
         }
     }
+
+    public List<GEEvent> getEvents(Date startDate, Date endDate, ArrayList<StudyProgram> studyProgramList) throws GEError {
+        ArrayList<String> studyProgramIDs = new ArrayList<String>(studyProgramList.size());
+        for (StudyProgram s : studyProgramList) studyProgramIDs.add(s.id);
+        return getEvents(startDate, endDate, studyProgramIDs);
+    }
+
 }

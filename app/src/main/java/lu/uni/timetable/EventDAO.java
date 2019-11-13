@@ -1,0 +1,32 @@
+package lu.uni.timetable;
+
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
+import androidx.room.Update;
+
+import java.util.Date;
+import java.util.List;
+
+@Dao
+public interface EventDAO {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public void insert(Event... events);
+
+    @Update
+    public void update(Event... events);
+
+    @Delete
+    public void delete(Event... events);
+
+    @Query("SELECT * FROM events WHERE id = :id")
+    public Event getEventById(String id);
+
+    @Query("SELECT * FROM events WHERE (start>= :start AND `end` <= :end )")
+    public List<Event> getEventsBetweenDates(Date start, Date end);
+
+    @Query("SELECT * FROM events")
+    public List<Event> getAllEvents();
+}
