@@ -59,7 +59,7 @@ public class Updater {
 
         @Override
         protected Boolean doInBackground(Void... emptiness) {
-            System.err.println("ASyncUpdate: Running now...");
+            System.err.println("Updater.ASyncUpdate: Running now...");
             update(start, end);
             return true;
         }

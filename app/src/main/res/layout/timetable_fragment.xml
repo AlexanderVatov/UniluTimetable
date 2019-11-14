@@ -11,15 +11,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        app:timeColumnTextSize="12sp"
-        app:hourHeight="60dp"
-        app:timeColumnPadding="8dp"
+        android:fadeScrollbars="false"
+        app:columnGap="2dp"
+        app:eventCornerRadius="4dp"
 
+        app:firstDayOfWeek="monday"
         app:headerRowPadding="12dp"
-        app:columnGap="8dp"
+        app:hourHeight="60dp"
+        app:nowLineColor="@color/colorPrimary"
+        app:nowLineDotRadius="3dp"
         app:numberOfVisibleDays="3"
+        app:showCurrentTimeFirst="true"
+        app:showDaySeparator="true"
+        app:showDistinctWeekendColor="true"
+        app:showHourSeparator="true"
         app:showNowLine="true"
-        app:showCurrentTimeFirst="true"/>
+        app:showNowLineDot="true"
+        app:timeColumnPadding="8dp"
+        app:timeColumnTextSize="12sp" />
 
 
 

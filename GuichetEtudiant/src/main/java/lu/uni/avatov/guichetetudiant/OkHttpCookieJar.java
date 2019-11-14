@@ -19,26 +19,22 @@ public final class OkHttpCookieJar implements CookieJar {
       hostCookies = new HashMap<>();
       cookieStore.put(url.host(), hostCookies);
     }
-    for (Cookie c: cookies) {
+    for (Cookie c: cookies)
       hostCookies.put(c.name(), c);
-    }
-    System.err.println("Saving " + cookies.size() + " cookies for " + url);
   }
 
   @Override
   public List<Cookie> loadForRequest(HttpUrl url) {
     HashMap<String, Cookie> hostCookies = cookieStore.get(url.host());
     if(hostCookies == null) {
-      System.err.println("Loading 0 cookies for " + url);
       return new ArrayList<Cookie>();
     }
 
     Collection<Cookie> cookieCollection = hostCookies.values();
     List<Cookie> cookies = new ArrayList<Cookie>(cookieCollection.size());
-    for (Cookie c: cookieCollection) {
+    for (Cookie c: cookieCollection)
       cookies.add(c);
-    }
-    System.err.println("Loading " + cookies.size() + " cookies for " + url);
+
     return cookies;
   }
 }

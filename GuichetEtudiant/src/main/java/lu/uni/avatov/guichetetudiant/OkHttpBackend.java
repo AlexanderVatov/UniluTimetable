@@ -79,8 +79,9 @@ public class OkHttpBackend implements GuichetEtudiant.NetworkBackend  {
 	@Override
 	public String get(String urlSuffix) throws GEError {
 		OkHttpClient client = getClient();
-
 		Request request = new Request.Builder().url(generateURL(urlSuffix)).build();
+
+		System.err.println("OkHttpBackend: GET " + request.url());
 
 		try {
 			Response response = client.newCall(request).execute();
@@ -107,17 +108,17 @@ public class OkHttpBackend implements GuichetEtudiant.NetworkBackend  {
 		OkHttpClient client = getClient();
 
 		FormBody.Builder body = new FormBody.Builder();
-		for (ParametersMultimap.Entry entry : parameters) {
+		for (ParametersMultimap.Entry entry : parameters)
 			body.add(entry.getKey(), entry.getValue());
-			System.err.println(entry.getKey() + ": " + entry.getValue());
-		}
+
 		FormBody b = body.build();
-		//System.err.println("POST body: " + b);
 
 		Request request = new Request.Builder()
 				.url(generateURL(urlSuffix))
 				.post(b)
 				.build();
+
+		System.err.println("OkHttpBackend: POST " + request.url());
 
 		try {
 			Response response = client.newCall(request).execute();

@@ -105,14 +105,7 @@ public class GuichetEtudiant {
 
         //Make request and parse JSON
         try {
-            JSONArray inArray;
-            {
-                //This is in a block so as to free the memory space occupied
-                //by the lengthy server reply when it's no longer needed
-                String json = networkBackend.post("GetEventInPeriode", parameters);
-                System.err.println("Server response: " + json);
-                inArray = new JSONArray(json);
-            }
+            JSONArray inArray  = new JSONArray(networkBackend.post("GetEventInPeriode", parameters));
 
             int length = inArray.length();
             ArrayList<GEEvent> outArray = new ArrayList<GEEvent>(length);
