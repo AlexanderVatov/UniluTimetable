@@ -13,7 +13,7 @@ public abstract class Database extends RoomDatabase {
         if (db == null) {
             synchronized (Database.class) {
                 if (db == null) {
-                    db = Room.databaseBuilder(TimetableApplication.getInstance(),
+                    db = Room.databaseBuilder(App.getInstance(),
                             Database.class, "database")
                             .allowMainThreadQueries()
                             .build();

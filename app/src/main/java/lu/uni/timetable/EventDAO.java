@@ -12,8 +12,11 @@ import java.util.List;
 
 @Dao
 public interface EventDAO {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     public void insert(Event... events);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public void upsert(Event... events);
 
     @Update
     public void update(Event... events);

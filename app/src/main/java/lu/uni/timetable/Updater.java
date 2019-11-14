@@ -1,5 +1,7 @@
 package lu.uni.timetable;
 
+import android.os.AsyncTask;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +26,7 @@ public class Updater {
             );
             EventDAO dao = Database.instance().getEventDAO();
             for (Event e: events) {
-                dao.insert(e); //If an event with the same id already exists, it will be updated
+                dao.upsert(e); //If an event with the same id already exists, it will be updated
             }
             System.err.println("Updater: Inserted " + events.size() + " events!");
 
@@ -46,4 +48,25 @@ public class Updater {
         asyncUpdate(start, end);
     }
 
+    public static class AsyncUpdate extends AsyncTask<Void, Void, Boolean> {
+        private Date start, end;
+
+        public AsyncUpdate(Date startDate, Date endDate) {
+            start = startDate;
+            end = endDate;
+        }
+
+
+        @Override
+        protected Boolean doInBackground(Void... emptiness) {
+            System.err.println("ASyncUpdate: Running now...");
+            update(start, end);
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean params) {
+            Presenter.getInstance().updatePerformed(start, end);
+        }
+    }
 }

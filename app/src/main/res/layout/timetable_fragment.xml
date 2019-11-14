@@ -17,7 +17,9 @@
 
         app:headerRowPadding="12dp"
         app:columnGap="8dp"
-        app:numberOfVisibleDays="3" />
+        app:numberOfVisibleDays="3"
+        app:showNowLine="true"
+        app:showCurrentTimeFirst="true"/>
 
 
 
