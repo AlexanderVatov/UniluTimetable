@@ -42,8 +42,14 @@ public class Updater {
 
     public static void asyncUpdate() {
         Calendar c = Calendar.getInstance();
-        Date start = c.getTime(); //Today
+        c.set(Calendar.DAY_OF_WEEK, 1);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.roll(Calendar.WEEK_OF_YEAR, -1);
+        Date start = c.getTime(); //Last Monday
         c.roll(Calendar.WEEK_OF_YEAR, 2);
+        c.roll(Calendar.SECOND, -1);
         Date end = c.getTime();
         asyncUpdate(start, end);
     }
