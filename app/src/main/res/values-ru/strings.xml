@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Рассписание Uni.lu</string>
+    <string name="action_settings">Настройки</string>
+    <string name="timetable">Рассписание</string>
+</resources>

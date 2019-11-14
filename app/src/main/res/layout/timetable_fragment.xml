@@ -13,12 +13,13 @@
 
         android:fadeScrollbars="false"
         app:columnGap="2dp"
-        app:eventCornerRadius="4dp"
+        app:defaultEventColor="@color/colorDefaultEvent"
 
+        app:eventCornerRadius="4dp"
         app:firstDayOfWeek="monday"
         app:headerRowPadding="12dp"
         app:hourHeight="60dp"
-        app:nowLineColor="@color/colorPrimary"
+        app:nowLineColor="@color/colorAccent"
         app:nowLineDotRadius="3dp"
         app:numberOfVisibleDays="3"
         app:showCurrentTimeFirst="true"

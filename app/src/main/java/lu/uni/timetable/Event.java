@@ -1,7 +1,6 @@
 package lu.uni.timetable;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -59,10 +58,10 @@ public class Event implements WeekViewDisplayable<Event> {
         endCalendar.setTime(end);
 
 
-        WeekViewEvent.Style style = new WeekViewEvent.Style.Builder()
-                .setBackgroundColor(ContextCompat.getColor(App.getInstance(),R.color.colorDefaultEvent))
-                .setTextStrikeThrough(isCanceled)
-                .build();
+//        WeekViewEvent.Style style = new WeekViewEvent.Style.Builder()
+//                .setBackgroundColor(ContextCompat.getColor(App.getInstance(),R.color.colorDefaultEvent))
+//                .setTextStrikeThrough(isCanceled)
+//                .build();
 
         return new WeekViewEvent.Builder<Event>(this)
                 .setId(Long.parseLong('1' + id.replaceAll("[^0-9]","")))
@@ -70,7 +69,7 @@ public class Event implements WeekViewDisplayable<Event> {
                 .setStartTime(startCalendar)
                 .setEndTime(endCalendar)
                 .setLocation(room)
-                .setStyle(style)
+                //.setStyle(style)
                 .build();
 
     }

@@ -6,6 +6,10 @@ import java.util.List;
 import lu.uni.avatov.guichetetudiant.Credentials;
 
 public class Settings {
+    public Settings() {
+        //Initialise settings
+    }
+
     public static String username() {
         return Credentials.username;
     }

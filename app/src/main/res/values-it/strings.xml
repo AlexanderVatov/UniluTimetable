@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Orario Uni.lu</string>
+    <string name="action_settings">Impostazioni</string>
+    <string name="timetable">Orario</string>
+</resources>
