@@ -18,8 +18,10 @@ import java.util.List;
 public class TimetableFragment extends Fragment implements ITimetableView {
 
     private View parentView;
-    WeekView<Event> weekView;
-    Presenter presenter;
+    private WeekView<Event> weekView;
+    private Presenter presenter;
+    private ITimetableFragmentObserver observer;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -35,16 +37,31 @@ public class TimetableFragment extends Fragment implements ITimetableView {
         return parentView;
     }
 
+    //Called by activity containing this fragment
+    public void requestDatabaseUpdate() {
+        Updater.asyncUpdate();
+    }
+
 
     @Override
-    public void onDatabaseUpdate(Date start, Date end) {
+    public void onDatabaseUpdated(Date start, Date end) {
+        if (observer != null) observer.onUpdateFinished();
         System.err.println("TimetableFragment: Notified of an update. Querying fresh data...");
         presenter.getEvents(new WeakReference<ITimetableView>(this), start, end);
     }
 
     @Override
-    public void queryFinished(List<Event> events) {
+    public void onQueryFinished(List<Event> events) {
         System.err.println("TimetableFragment: Received " + events.size() + " events! ");
         weekView.submit(events);
+    }
+
+    public void setObserver(ITimetableFragmentObserver observer) {
+        this.observer = observer;
+    }
+
+
+    public interface ITimetableFragmentObserver {
+        void onUpdateFinished();
     }
 }

@@ -2,18 +2,57 @@ package lu.uni.timetable;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
-public class MainActivity extends AppCompatActivity {
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+public class MainActivity extends AppCompatActivity implements TimetableFragment.ITimetableFragmentObserver{
+    private TimetableFragment timetableFragment;
+    private FloatingActionButton updateButton;
+    private Animation updateButtonAnimation;
+    private boolean updateRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        updateButton = findViewById(R.id.updateButton);
+        updateButtonAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_update_button);
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        if (fragment instanceof TimetableFragment) {
+            System.err.println("MainActivity: setting TimetableFragment observer");
+            timetableFragment = (TimetableFragment) fragment;
+            timetableFragment.setObserver(this);
+        }
     }
 
     public void update(View view) {
-        Updater.asyncUpdate();
+        if(
+                !updateRunning //Do not update if an update is already in progress
+                && timetableFragment != null //Perhaps if the user manages to press the update updateButton
+                //before the fragment is attached, or in case something weird happens
+          )
+        {
+            timetableFragment.requestDatabaseUpdate();
+            updateRunning = true;
+            updateButton.startAnimation(updateButtonAnimation);
+        }
+    }
+
+    @Override
+    public void onUpdateFinished() {
+        System.err.println("MainActivity: update finished!");
+        updateButton.clearAnimation();
+        //updateButtonAnimation.cancel();
+        updateRunning = false;
     }
 }

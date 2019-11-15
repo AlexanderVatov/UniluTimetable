@@ -28,7 +28,7 @@ public class Presenter {
         for (WeakReference<ITimetableView> viewWeakRef : views) {
             ITimetableView view = viewWeakRef.get();
             if (view != null)
-                view.onDatabaseUpdate(start, end);
+                view.onDatabaseUpdated(start, end);
         }
     }
 
@@ -98,7 +98,7 @@ public class Presenter {
         protected void onPostExecute(List<Event> result) {
             ITimetableView v = view.get();
             if (v != null) {
-                v.queryFinished(result);
+                v.onQueryFinished(result);
             }
 
         }
