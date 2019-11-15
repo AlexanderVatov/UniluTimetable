@@ -3,4 +3,5 @@
     <string name="app_name">Emploi du temps Uni.lu</string>
     <string name="action_settings">Paramètres</string>
     <string name="timetable">Emploi du temps</string>
+    <string name="update_finished">Mise à jour terminée</string>
 </resources>

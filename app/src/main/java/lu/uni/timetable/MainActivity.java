@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity implements TimetableFragment.ITimetableFragmentObserver{
     private TimetableFragment timetableFragment;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements TimetableFragment
     @Override
     public void onUpdateFinished() {
         System.err.println("MainActivity: update finished!");
+        Snackbar.make(findViewById(R.id.coordinatorLayout), getString(R.string.update_finished), Snackbar.LENGTH_SHORT).show();
         updateButton.clearAnimation();
         //updateButtonAnimation.cancel();
         updateRunning = false;
