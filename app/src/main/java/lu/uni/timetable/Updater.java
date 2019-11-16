@@ -2,7 +2,6 @@ package lu.uni.timetable;
 
 import android.os.AsyncTask;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -34,20 +33,13 @@ public class Updater {
     }
 
     public static void asyncUpdate(UpdateListener listener, Date start, Date end) {
+        System.err.println("Updater: update requested between " + start + " and " + end);
         new AsyncUpdate(listener, start,end).execute();
     }
 
     public static void asyncUpdate(UpdateListener listener) {
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.DAY_OF_WEEK, 1);
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.roll(Calendar.WEEK_OF_YEAR, -1);
-        Date start = c.getTime(); //Last Monday
-        c.roll(Calendar.WEEK_OF_YEAR, 2);
-        c.roll(Calendar.SECOND, -1);
-        Date end = c.getTime();
+        Date start = Utils.firstDayOfMonth(Utils.Month.CURRENT_MONTH);
+        Date end = Utils.lastDayOfMonth(Utils.Month.NEXT_MONTH);
         asyncUpdate(listener, start, end);
     }
 

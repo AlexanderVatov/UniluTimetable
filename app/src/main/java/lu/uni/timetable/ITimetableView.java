@@ -4,6 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 public interface ITimetableView {
-    void onDatabaseUpdated(Date start, Date end);
-    void onQueryFinished(List<Event> events);
+    void onDatabaseUpdated(Date startOfUpdatedPeriod, Date endOfUpdatedPeriod);
+    void onEventsReady(List<Event> events);
 }

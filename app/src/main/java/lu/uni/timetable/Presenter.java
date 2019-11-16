@@ -32,7 +32,7 @@ public class Presenter {
         }
     }
 
-    public void getEvents(WeakReference<ITimetableView> view, Date start, Date end) {
+    public void requestEvents(WeakReference<ITimetableView> view, Date start, Date end) {
         new DatabaseQuery(view, start, end).execute();
     }
 
@@ -45,7 +45,7 @@ public class Presenter {
         c.roll(Calendar.DAY_OF_YEAR, 1);
         c.roll(Calendar.SECOND, -1);
         Date end = c.getTime();
-        getEvents(view, start, end);
+        requestEvents(view, start, end);
     }
 
     public void getEventsThisWeek (WeakReference<ITimetableView> view) {
@@ -59,7 +59,7 @@ public class Presenter {
         c.roll(Calendar.WEEK_OF_YEAR, 2);
         c.roll(Calendar.SECOND, -1);
         Date end = c.getTime();
-        getEvents(view, start, end);
+        requestEvents(view, start, end);
     }
 
     public static Presenter getInstance() {
@@ -98,7 +98,7 @@ public class Presenter {
         protected void onPostExecute(List<Event> result) {
             ITimetableView v = view.get();
             if (v != null) {
-                v.onQueryFinished(result);
+                v.onEventsReady(result);
             }
 
         }

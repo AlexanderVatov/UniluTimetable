@@ -50,7 +50,7 @@ public class Event implements WeekViewDisplayable<Event> {
     }
 
     @Override
-    public WeekViewEvent toWeekViewEvent() {
+    public WeekViewEvent<Event> toWeekViewEvent() {
 
         Calendar startCalendar = Calendar.getInstance();
         startCalendar.setTime(start);
