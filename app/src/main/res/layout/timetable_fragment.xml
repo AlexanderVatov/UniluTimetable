@@ -19,7 +19,7 @@
         app:firstDayOfWeek="monday"
         app:headerRowPadding="12dp"
         app:hourHeight="60dp"
-        app:nowLineColor="@color/colorAccent"
+        app:nowLineColor="@color/colorNowLine"
         app:nowLineDotRadius="3dp"
         app:numberOfVisibleDays="3"
         app:showCurrentTimeFirst="true"

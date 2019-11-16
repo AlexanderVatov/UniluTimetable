@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
 
-public class TimetableFragment extends Fragment implements ITimetableView {
+public class TimetableFragment extends Fragment implements ITimetableView, Updater.UpdateListener {
 
     private View parentView;
     private WeekView<Event> weekView;
@@ -39,7 +39,7 @@ public class TimetableFragment extends Fragment implements ITimetableView {
 
     //Called by activity containing this fragment
     public void requestDatabaseUpdate() {
-        Updater.asyncUpdate();
+        Updater.asyncUpdate(this);
     }
 
 
@@ -60,8 +60,20 @@ public class TimetableFragment extends Fragment implements ITimetableView {
         this.observer = observer;
     }
 
+    @Override
+    public void onUpdateFinished(Date startDate, Date endDate) {
+        //Do nothing; will be informed by Presenter anyway
+    }
+
+    @Override
+    public void onUpdateError(Exception error) {
+        if(observer != null) observer.onUpdateError(error);
+
+    }
+
 
     public interface ITimetableFragmentObserver {
-        void onUpdateFinished();
+        void onUpdateFinished(); //Replaced by UpdateListener.onUpdateFinished
+        void onUpdateError(Exception error);
     }
 }
