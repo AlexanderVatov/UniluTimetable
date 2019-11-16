@@ -45,7 +45,7 @@ public class TimetableFragment extends Fragment implements ITimetableView, Updat
 
     @Override
     public void onDatabaseUpdated(Date start, Date end) {
-        if (observer != null) observer.onUpdateFinished();
+
         System.err.println("TimetableFragment: Notified of an update. Querying fresh data...");
         presenter.getEvents(new WeakReference<ITimetableView>(this), start, end);
     }
@@ -62,7 +62,8 @@ public class TimetableFragment extends Fragment implements ITimetableView, Updat
 
     @Override
     public void onUpdateFinished(Date startDate, Date endDate) {
-        //Do nothing; will be informed by Presenter anyway
+        //Do nothing with data; it will also be received by onDatabaseUpdated (called by Presenter) anyway
+        if (observer != null) observer.onUpdateFinished();
     }
 
     @Override

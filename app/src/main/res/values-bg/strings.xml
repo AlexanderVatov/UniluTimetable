@@ -3,6 +3,6 @@
     <string name="app_name">"Разписание Uni.lu "</string>
     <string name="action_settings">Настройки</string>
     <string name="timetable">Разписание</string>
-    <string name="update_finished">Обновлението е завършено</string>
+    <string name="update_finished">Обновлението беше успешно завършено</string>
     <string name="update_error">Обновлението се провали поради грешка!</string>
 </resources>

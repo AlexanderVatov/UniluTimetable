@@ -3,6 +3,6 @@
     <string name="app_name">Emploi du temps Uni.lu</string>
     <string name="action_settings">Paramètres</string>
     <string name="timetable">Emploi du temps</string>
-    <string name="update_finished">Mise à jour terminée</string>
+    <string name="update_finished">Mise à jour terminée avec succès</string>
     <string name="update_error">Mise à jour échouée à cause d\'une erreur!</string>
 </resources>
