@@ -20,6 +20,8 @@ import java.util.List;
 public class TimetableFragment extends Fragment implements ITimetableView, Updater.UpdateListener, OnLoadMoreListener {
 
     private View parentView;
+
+
     private WeekView<Event> weekView;
     private Presenter presenter;
     private ITimetableFragmentObserver observer;
@@ -100,5 +102,9 @@ public class TimetableFragment extends Fragment implements ITimetableView, Updat
     public interface ITimetableFragmentObserver {
         void onUpdateFinished(); //Replaced by UpdateListener.onUpdateFinished
         void onUpdateError(Exception error);
+    }
+
+    public WeekView getWeekView() {
+        return weekView;
     }
 }

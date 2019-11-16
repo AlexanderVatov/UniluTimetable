@@ -5,4 +5,9 @@
     <string name="timetable">Orario</string>
     <string name="update_finished">Aggiornamento terminato</string>
     <string name="update_error">Aggiornamento fallito</string>
+    <string name="go_today">Mostrare oggi</string>
+    <string name="view_day">Vista di una giornata</string>
+    <string name="view_3days">Vista di tre giorni</string>
+    <string name="view_7days">Vista di una settimana</string>
+    <string name="view_5days">Vista di cinque giorni</string>
 </resources>

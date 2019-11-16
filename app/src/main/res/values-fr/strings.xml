@@ -5,4 +5,9 @@
     <string name="timetable">Emploi du temps</string>
     <string name="update_finished">Mise à jour terminée avec succès</string>
     <string name="update_error">Mise à jour échouée à cause d\'une erreur!</string>
+    <string name="go_today">Motrer aujourd\'hui</string>
+    <string name="view_day">Vue de journée</string>
+    <string name="view_3days">Vue de trois jours</string>
+    <string name="view_7days">Vue de semaine</string>
+    <string name="view_5days">Vue de cinq jours</string>
 </resources>

@@ -5,4 +5,9 @@
     <string name="timetable">Рассписание</string>
     <string name="update_finished">Обновление закончено</string>
     <string name="update_error">Обновеление провалилось!</string>
+    <string name="go_today">Покажи сегодня</string>
+    <string name="view_day">Покажи один день</string>
+    <string name="view_3days">Покажи три дня</string>
+    <string name="view_7days">Покажи одну неделю</string>
+    <string name="view_5days">Покажи пять дней</string>
 </resources>

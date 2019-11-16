@@ -5,4 +5,9 @@
     <string name="timetable">Разписание</string>
     <string name="update_finished">Обновлението беше успешно завършено</string>
     <string name="update_error">Обновлението се провали поради грешка!</string>
+    <string name="go_today">Покажи днес</string>
+    <string name="view_day">Дневен преглед</string>
+    <string name="view_3days">Тридневен преглед</string>
+    <string name="view_7days">Седмичен преглед</string>
+    <string name="view_5days">Петдневен преглед</string>
 </resources>

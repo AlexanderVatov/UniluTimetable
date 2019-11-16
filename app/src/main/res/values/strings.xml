@@ -4,4 +4,9 @@
     <string name="timetable">Timetable</string>
     <string name="update_finished">Update finished</string>
     <string name="update_error">Update failed due to error!</string>
+    <string name="go_today">Show today</string>
+    <string name="view_day">Day view</string>
+    <string name="view_3days">3-day view</string>
+    <string name="view_7days">Week view</string>
+    <string name="view_5days">5-day view</string>
 </resources>
