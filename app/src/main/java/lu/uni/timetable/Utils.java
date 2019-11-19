@@ -74,4 +74,27 @@ public class Utils {
         }
         return lastDayOfMonth(c.getTime());
     }
+
+    public static String toSentenceCase(String text, String wordSeparators) {
+        if (text == null || text.isEmpty()) {
+            return text;
+        }
+
+        StringBuilder converted = new StringBuilder();
+
+        boolean capitaliseNext = true;
+        for (char ch : text.toCharArray()) {
+            if (wordSeparators.indexOf(ch) != -1) {
+                capitaliseNext = true;
+            } else if (capitaliseNext) {
+                ch = Character.toTitleCase(ch);
+                capitaliseNext = false;
+            } else {
+                ch = Character.toLowerCase(ch);
+            }
+            converted.append(ch);
+        }
+
+        return converted.toString();
+    }
 }

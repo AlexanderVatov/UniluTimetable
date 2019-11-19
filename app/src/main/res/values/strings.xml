@@ -9,4 +9,10 @@
     <string name="view_3days">3-day view</string>
     <string name="view_7days">Week view</string>
     <string name="view_5days">5-day view</string>
+    <string name="event_cm">Lecture</string>
+    <string name="event_td">Tutorial</string>
+    <string name="event_ex">Exam</string>
+    <string name="show_map">Show on map</string>
+    <string name="event_room">Room</string>
+    <string name="event_tp">Practical work</string>
 </resources>

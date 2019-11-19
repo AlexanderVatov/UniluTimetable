@@ -10,4 +10,10 @@
     <string name="view_3days">Тридневен преглед</string>
     <string name="view_7days">Седмичен преглед</string>
     <string name="view_5days">Петдневен преглед</string>
+    <string name="event_cm">Лекция</string>
+    <string name="event_td">Упражнителна сесия</string>
+    <string name="event_ex">Изпит</string>
+    <string name="show_map">Покажи на картата</string>
+    <string name="event_room">Аудитория</string>
+    <string name="event_tp">Практическо обучение</string>
 </resources>

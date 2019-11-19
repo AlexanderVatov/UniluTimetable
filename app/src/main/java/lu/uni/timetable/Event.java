@@ -17,6 +17,7 @@ import lu.uni.avatov.guichetetudiant.GEEvent;
 
 @Entity (tableName = "events")
 public class Event implements WeekViewDisplayable<Event> {
+
     public Event() {
 
     }
