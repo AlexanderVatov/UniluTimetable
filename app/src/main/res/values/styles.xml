@@ -17,4 +17,18 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <!-- The style below is used for the text views in activity_event_details as well as these added
+     programmatically by EventDetailsActivity. However, due to limitations of Android (only one style
+     per view is allowed), only the text appearance of the programmatically added text views follows
+     that style; other attributes, such as margins and drawable  padding, have to be manually set in
+     the code in EventDetailsActivity.onCreate. If you edit such attributes, make sure to update them
+     there, as well. -->
+
+    <style name="EventDetails" parent="TextAppearance.AppCompat">
+        <item name="android:drawablePadding">6dp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+
 </resources>

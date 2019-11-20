@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class EventPresenter {
+public class EventFormatter {
 
-    public EventPresenter(Context c, Event e) {
+    public EventFormatter(Context c, Event e) {
         this.c = c;
         this.e = e;
     }
@@ -29,7 +29,7 @@ public class EventPresenter {
 
 
     public String getTitle() {
-        if(title == null) title = e.getTitle();
+        if(title == null) title = e.getTitle().trim();
         return title;
     }
 

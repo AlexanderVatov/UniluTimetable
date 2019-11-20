@@ -1,108 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!-- In addition to the text views defined below, EventDetailsActivity programmatically adds one per
+     each lecturer. For this reason, style attributes are set in the EventDetails style. However,
+     due to limitations of Android (only one style per view is allowed), only the text appearance
+     of the programmatically added text views follows that style; other attributes, such as drawable
+     padding and margins, have to be independently set in the code in EventDetailsActivity.onCreate.
+     If you edit such attributes, make sure to update them there, as well. -->
 
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/eventDetailsLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".EventDetailsActivity">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/titleView"
+    <LinearLayout
+        android:id="@+id/eventDetailsLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:textColor="@android:color/black"
-        android:textSize="36sp"
-        android:layout_marginTop="8dp"/>
-
-    <TextView
-        android:id="@+id/subjectView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:drawableStart="@drawable/event_subject"
-        android:textSize="20sp"
-        android:textColor="@android:color/black"/>
-
-    <TextView
-        android:id="@+id/typeView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableStart="@drawable/event_type"
-        android:textSize="20sp"
-        android:layout_marginBottom="6dp"
-        android:textColor="@android:color/black"/>
-
-    <TextView
-        android:id="@+id/timeRangeView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:drawableStart="@drawable/event_time"
-        android:textSize="20sp"
-        android:layout_marginBottom="6dp"
-        android:textColor="@android:color/black"/>
-
-    <TextView
-        android:id="@+id/dateView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:drawableStart="@drawable/go_today"
-        android:textSize="20sp"
-        android:textColor="@android:color/black"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="6dp">
 
         <TextView
-            android:id="@+id/buildingView"
+            android:id="@+id/titleView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/event_building"
-            android:textSize="20sp"
-            android:onClick="showMap"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="6dp"
-            android:textColor="@android:color/black" />
+            android:textSize="30sp"
+            android:layout_marginTop="8dp"
+            style="@style/EventDetails" />
 
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/subjectView"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="0dp"
-            app:srcCompat="@drawable/map"
-            android:onClick="showMap"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/show_map"/>
+            android:drawableStart="@drawable/event_subject"
+            style="@style/EventDetails"/>
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/typeView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/event_type"
+            style="@style/EventDetails" />
 
-    <TextView
-        android:id="@+id/roomView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableStart="@drawable/event_room"
-        android:textSize="20sp"
-        android:layout_marginBottom="6dp"
-        android:textColor="@android:color/black"/>
+        <TextView
+            android:id="@+id/timeRangeView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/event_time"
+            style="@style/EventDetails" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/lecturerView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:drawableStart="@drawable/event_lecturer"-->
-<!--        android:textSize="20sp"-->
-<!--        android:layout_marginBottom="6dp"-->
-<!--        android:textColor="@android:color/black"/>-->
+        <TextView
+            android:id="@+id/dateView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/go_today"
+            android:paddingBottom="0dp"
+            style="@style/EventDetails"/>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buildingLayout"
+            style="@style/EventDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="0dp">
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/buildingView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+
+                android:drawableStart="@drawable/event_building"
+                android:drawablePadding="6dp"
+                android:onClick="showMap"
+                android:paddingBottom="0dp"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp"
+                android:contentDescription="@string/show_map"
+                android:onClick="showMap"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/map" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/roomView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/event_room"
+            style="@style/EventDetails"/>
+
+    </LinearLayout>
+
+</ScrollView>
 
 

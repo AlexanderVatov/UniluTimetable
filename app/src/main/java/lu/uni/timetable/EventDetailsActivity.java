@@ -1,7 +1,6 @@
 package lu.uni.timetable;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -25,24 +24,25 @@ public class EventDetailsActivity extends AppCompatActivity {
         System.err.println("EventDetailsActivity: just created!");
         Event e = EventIntent.getEvent(getIntent());
 
-        EventPresenter p = new EventPresenter(this, e);
-        String title = p.getTitle();
-        String subject = p.getSubject();
-        String building = p.getBuilding();
-        String room = p.getRoom();
-        String timeRange = p.getTimeRange();
-        String date = p.getDate();
-        String type = p.getType();
-        List<String> lecturers = p.getLecturers();
+        EventFormatter formatter = new EventFormatter(this, e);
+        String title = formatter.getTitle();
+        String subject = formatter.getSubject();
+        String building = formatter.getBuilding();
+        String room = formatter.getRoom();
+        String timeRange = formatter.getTimeRange();
+        String date = formatter.getDate();
+        String type = formatter.getType();
+        List<String> lecturers = formatter.getLecturers();
+        this.buildingCode = formatter.getBuildingCode();
 
         ((TextView) findViewById(R.id.titleView)).setText(title);
         if (title.equals(subject))
-            findViewById(R.id.subjectView).setVisibility(View.INVISIBLE);
+            findViewById(R.id.subjectView).setVisibility(View.GONE);
         else
             ((TextView) findViewById(R.id.subjectView)).setText(e.getSubject());
 
         if (building.isEmpty())
-            findViewById(R.id.buildingView).setVisibility(View.INVISIBLE);
+            findViewById(R.id.buildingView).setVisibility(View.GONE);
         else
             ((TextView) findViewById(R.id.buildingView)).setText(building);
 
@@ -50,7 +50,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.timeRangeView)).setText(timeRange);
 
         if (date.isEmpty()) {
-            findViewById(R.id.dateView).setVisibility(View.INVISIBLE);
+            findViewById(R.id.dateView).setVisibility(View.GONE);
         } else {
             ((TextView) findViewById(R.id.dateView)).setText(date);
         }
@@ -58,15 +58,16 @@ public class EventDetailsActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.typeView)).setText(type);
         LinearLayout layout = findViewById(R.id.eventDetailsLayout);
         for(String lecturer: lecturers) {
-            TextView t = new TextView(this);
+            TextView t = new TextView(this, null, R.style.EventDetails);
+            t.setTextAppearance(R.style.EventDetails);
+            t.setText(lecturer);
             t.setLayoutParams(new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             t.setCompoundDrawablesWithIntrinsicBounds(
                     getDrawable(R.drawable.event_lecturer), null, null, null);
-            t.setText(lecturer);
-            t.setTextSize(20);
-            t.setTextColor(Color.BLACK);
-            t.setPadding(0, 0, 0, 6);
+            float density = getResources().getDisplayMetrics().density;
+            t.setPadding(0,0,0, ((int) (8*density)));
+            t.setCompoundDrawablePadding(((int) (6*density)));
             layout.addView(t);
 
         }
