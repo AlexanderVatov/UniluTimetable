@@ -17,20 +17,23 @@ public class EventIntent extends Intent {
     public static final String room = "lu.uni.timetable.room";
     public static final String main_program_id = "lu.uni.timetable.main_program_id";
     public static final String time_added = "lu.uni.timetable.time_added";
+
     
-    public EventIntent(Event event, Context context, Class<?> cls) {
-        super(context, cls);
-        putExtra(start, event.getStart().getTime());
-        putExtra(end, event.getEnd().getTime());
-        putExtra(title, event.getTitle());
-        putExtra(subject, event.getSubject());
-        putExtra(subject_id, event.getSubjectId());
-        putExtra(lecturer, event.getLecturer());
-        putExtra(event_type, event.getEventType());
-        putExtra(is_canceled, event.isCanceled());
-        putExtra(room, event.getRoom());
-        putExtra(main_program_id, event.getMainStudyProgramId());
-        //putExtra(time_added, event.getTimeAdded().getTime());
+    public static Intent newIntent (Event event, Context context, Class<?> cls) {
+        Intent i = new Intent(context, cls);
+        i.putExtra(start, event.getStart().getTime());
+        i.putExtra(end, event.getEnd().getTime());
+        i.putExtra(title, event.getTitle());
+        i.putExtra(subject, event.getSubject());
+        i.putExtra(subject_id, event.getSubjectId());
+        i.putExtra(lecturer, event.getLecturer());
+        i.putExtra(event_type, event.getEventType());
+        i.putExtra(is_canceled, event.isCanceled());
+        i.putExtra(room, event.getRoom());
+        i.putExtra(main_program_id, event.getMainStudyProgramId());
+        //i.putExtra(time_added, event.getTimeAdded().getTime());
+
+        return i;
     }
 
     public static Event getEvent(Intent intent) {

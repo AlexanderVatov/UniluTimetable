@@ -1,5 +1,6 @@
 package lu.uni.timetable;
 
+import android.content.Intent;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -112,7 +113,7 @@ public class TimetableFragment
     @Override
     public void onEventClick(Event event, @NotNull RectF rectF) {
         System.err.println("TimetableFragment.onEventClick");
-        EventIntent intent = new EventIntent(event, activity, EventDetailsActivity.class);
+        Intent intent = EventIntent.newIntent(event, activity, EventDetailsActivity.class);
         startActivity(intent);
     }
 

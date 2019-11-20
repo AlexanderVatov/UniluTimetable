@@ -5,19 +5,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/eventDetailsLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-
-
     tools:context=".EventDetailsActivity">
-<!--    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--    app:layout_constraintEnd_toEndOf="parent"-->
-<!--    app:layout_constraintStart_toStartOf="parent"-->
-<!--    app:layout_constraintTop_toTopOf="parent"-->
-<!--    <TableRow-->
-<!--        android:layout_width="fill_parent"-->
-<!--        android:layout_height="fill_parent">-->
 
     <TextView
         android:id="@+id/titleView"
@@ -27,13 +19,6 @@
         android:textColor="@android:color/black"
         android:textSize="36sp"
         android:layout_marginTop="8dp"/>
-<!--        android:layout_marginBottom="6dp"-->
-<!--    </TableRow>-->
-
-
-<!--    <TableRow-->
-<!--        android:layout_width="fill_parent"-->
-<!--        android:layout_height="fill_parent">-->
 
     <TextView
         android:id="@+id/subjectView"
@@ -108,24 +93,16 @@
         android:layout_marginBottom="6dp"
         android:textColor="@android:color/black"/>
 
-    <TextView
-        android:id="@+id/lecturerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableStart="@drawable/event_lecturer"
-        android:textSize="20sp"
-        android:layout_marginBottom="6dp"
-        android:textColor="@android:color/black"/>
+<!--    <TextView-->
+<!--        android:id="@+id/lecturerView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:drawableStart="@drawable/event_lecturer"-->
+<!--        android:textSize="20sp"-->
+<!--        android:layout_marginBottom="6dp"-->
+<!--        android:textColor="@android:color/black"/>-->
 
 
-    <!--    </TableRow>-->
-
-<!--    <TableRow-->
-<!--        android:layout_width="fill_parent"-->
-<!--        android:layout_height="fill_parent">-->
-
-
-    <!--    </TableRow>-->
 </LinearLayout>
 
 

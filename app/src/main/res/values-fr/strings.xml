@@ -10,7 +10,7 @@
     <string name="view_3days">Vue de trois jours</string>
     <string name="view_7days">Vue de semaine</string>
     <string name="view_5days">Vue de cinq jours</string>
-    <string name="event_cm">Cours Magistral</string>
+    <string name="event_cm">Cours magistral</string>
     <string name="event_td">Travaux dirigés</string>
     <string name="event_ex">Examen</string>
     <string name="show_map">Montrer sur la carte</string>

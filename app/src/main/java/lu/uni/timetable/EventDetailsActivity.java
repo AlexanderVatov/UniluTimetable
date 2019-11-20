@@ -1,17 +1,21 @@
 package lu.uni.timetable;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.format.DateUtils;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.List;
+
 public class EventDetailsActivity extends AppCompatActivity {
     private String buildingCode = "";
-    private String title, subject, building, room, timeRange, date, type, lecturer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,8 +24,16 @@ public class EventDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_details);
         System.err.println("EventDetailsActivity: just created!");
         Event e = EventIntent.getEvent(getIntent());
-        formatFields(e);
 
+        EventPresenter p = new EventPresenter(this, e);
+        String title = p.getTitle();
+        String subject = p.getSubject();
+        String building = p.getBuilding();
+        String room = p.getRoom();
+        String timeRange = p.getTimeRange();
+        String date = p.getDate();
+        String type = p.getType();
+        List<String> lecturers = p.getLecturers();
 
         ((TextView) findViewById(R.id.titleView)).setText(title);
         if (title.equals(subject))
@@ -44,80 +56,23 @@ public class EventDetailsActivity extends AppCompatActivity {
         }
 
         ((TextView) findViewById(R.id.typeView)).setText(type);
-        ((TextView) findViewById(R.id.lecturerView)).setText(lecturer);
+        LinearLayout layout = findViewById(R.id.eventDetailsLayout);
+        for(String lecturer: lecturers) {
+            TextView t = new TextView(this);
+            t.setLayoutParams(new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            t.setCompoundDrawablesWithIntrinsicBounds(
+                    getDrawable(R.drawable.event_lecturer), null, null, null);
+            t.setText(lecturer);
+            t.setTextSize(20);
+            t.setTextColor(Color.BLACK);
+            t.setPadding(0, 0, 0, 6);
+            layout.addView(t);
+
+        }
     }
 
-    private void formatFields(Event e) {
 
-        title = e.getTitle();
-        subject = e.getSubject();
-        
-        //Format lecturer
-        try {
-            StringBuilder builder = new StringBuilder();
-            String[] people = e.getLecturer().split(",( )?");
-            for (int i = 0; i < people.length; ++i) {
-                StringBuilder firstNames = new StringBuilder(), surnames = new StringBuilder();
-                boolean surnamesFinished = false;
-                for (String name : people[i].split(" ")) {
-                    if (!surnamesFinished && name.equals(name.toUpperCase())) {
-                        String titlecase = Utils.toSentenceCase(name, " -");
-                        if(surnames.length() != 0) surnames.append(' ');
-                        surnames.append(titlecase);
-                    } else {
-                        surnamesFinished = true;
-                        firstNames.append(name);
-                        firstNames.append(' ');
-                    }
-                }
-                if (i != 0) builder.append(";\n");
-                builder.append(firstNames.toString());
-                builder.append(surnames.toString());
-            }
-            lecturer = builder.toString();
-        }
-        catch (Exception whatever) {
-            lecturer = e.getLecturer();
-        }
-        
-        //Format building and room
-        String[] locationParts = e.getRoom().replaceFirst("^[ \\t]+", "").split(" ", 2);
-        try {
-            buildingCode = locationParts[0];
-            room = "Room " + locationParts[1];
-
-            building = Constants.buildingNames.get(buildingCode);
-            if (building == null) {
-                building = "";
-                buildingCode = "";
-                room = e.getRoom();
-            }
-        } catch (ArrayIndexOutOfBoundsException ex) {
-            building = "";
-            room = e.getRoom();
-        }
-        
-        //Format timeRange and date
-        long startMilliseconds = e.getStart().getTime(), endMilliseconds = e.getEnd().getTime();
-        if ((endMilliseconds - startMilliseconds) / (24 * 60 * 60 * 1000) == 0) {
-            //If the start and end are on the same day
-            timeRange = DateUtils.formatDateRange(this, startMilliseconds, endMilliseconds,
-                    DateUtils.FORMAT_SHOW_TIME);
-            date = DateUtils.formatDateTime(this, startMilliseconds,
-                    DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_DATE);
-        } else {
-            timeRange = DateUtils.formatDateRange(this, startMilliseconds, endMilliseconds,
-                    DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_WEEKDAY);
-            date = "";
-        }
-
-        //Format type
-        type = e.getEventType();
-        if (type.equals("CM")) type = getString(R.string.event_cm);
-        else if (type.equals("TD")) type = getString(R.string.event_td);
-        else if (type.equals("EX")) type = getString(R.string.event_ex);
-        else if (type.equals("TP")) type = getString(R.string.event_tp);
-    }
 
     public void showMap(View view) {
         System.err.println("EventDetailsActivity.showMap");
