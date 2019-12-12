@@ -3,14 +3,25 @@ package lu.uni.timetable;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * The Utils class contains various utility methods used in different parts of the application.
+ */
+
 public class Utils {
     enum Month {
         LAST_MONTH,
         CURRENT_MONTH,
         NEXT_MONTH
     }
-    public static int LAST_MONTH = -1;
-    public static int NEXT_MONTH = -2;
+
+    /**
+     * Returns the first day of the month identified by d. For instance, if d is 26 August, 1789,
+     * then this method will return the date 1 August 1789, 00:00:00h.
+     *
+     * @param d A util.Date used to identify a month and a year. No other date or time parameters will be retained.
+     * @return A util.Date at 00:00:00h on the first day of the same month as d.
+     */
+
     public static Date firstDayOfMonth(Date d) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
@@ -24,6 +35,14 @@ public class Utils {
         );
         return c.getTime();
     }
+
+    /**
+     * Returns the first day of a month relative to the present moment. For example, if this method
+     * is called on the 25th December 2019 with an argument CURRENT_MONTH, it will return the date
+     * 1 December 2019, 00:00:00h.
+     * @param month Either Utils.Month.LAST_MONTH, .CURRENT_MONTH, or .NEXT_MONTH, relative to the present day.
+     * @return A util.Date at 00:00:00h on the first day of the month identified by d.
+     */
 
     public static Date firstDayOfMonth(Month month) {
         Calendar c = Calendar.getInstance();
@@ -43,6 +62,14 @@ public class Utils {
         return firstDayOfMonth(c.getTime());
     }
 
+    /**
+     * Returns the last day of the month identified by d. For instance, if d is 26 August, 1789,
+     * then this method will return the date 31 August 1789, 23:59:59h.
+     *
+     * @param d A util.Date used to identify a month and a year. No other date or time parameters will be retained.
+     * @return A util.Date at 23:59:59h on the last day of the same month as d.
+     */
+
     public static Date lastDayOfMonth(Date d) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
@@ -57,6 +84,13 @@ public class Utils {
         return c.getTime();
     }
 
+    /**
+     * Returns the last day of a month relative to the present moment. For example, if this method
+     * is called on the 25th December 2019 with an argument CURRENT_MONTH, it will return the date
+     * 31 December 2019, 23:59:59h.
+     * @param month Either Utils.Month.LAST_MONTH, .CURRENT_MONTH, or .NEXT_MONTH, relative to the present day.
+     * @return A util.Date at 23:59:59h on the last day of the month identified by month.
+     */
     public static Date lastDayOfMonth(Month month) {
         Calendar c = Calendar.getInstance();
         switch (month) {
@@ -75,8 +109,19 @@ public class Utils {
         return lastDayOfMonth(c.getTime());
     }
 
+    /**
+     * Converts a string to sentence case, i.e. with the first character of each word in uppercase
+     * and subsequent characters of the same word in lowercase. Words are considered to be strings
+     * of arbitrary consecutive characters not contained in wordSeparators. If a character is
+     * contained in wordSeparators, it will be left unchanged. For example,
+     * Utils.toSentenceCase("500,000 EU citizens r", " ,r") returns "500,000 Eu Citizens r".
+     *
+     * @param text Any string.
+     * @param wordSeparators A sequence of separator characters, e.g. " " or ",;:"
+     * @return A string with the same length as text. Null will be returned if and only if text is null.
+     */
     public static String toSentenceCase(String text, String wordSeparators) {
-        if (text == null || text.isEmpty()) {
+        if (text == null || text.isEmpty() || wordSeparators == null) {
             return text;
         }
 

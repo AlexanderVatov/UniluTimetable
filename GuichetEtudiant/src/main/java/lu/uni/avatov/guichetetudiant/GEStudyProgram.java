@@ -1,6 +1,6 @@
 package lu.uni.avatov.guichetetudiant;
 
-public class StudyProgram {
+public class GEStudyProgram {
     public String id;
     public String title;
     public String academicYear;

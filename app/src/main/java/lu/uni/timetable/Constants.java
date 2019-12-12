@@ -4,6 +4,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class provides constants useful for different parts of the application.
+ */
+
 public class Constants {
 
     public static final String GoogleMapsPackage = "com.google.android.apps.maps";

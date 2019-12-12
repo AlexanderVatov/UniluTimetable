@@ -7,15 +7,32 @@ import java.util.List;
 
 import lu.uni.avatov.guichetetudiant.GEError;
 import lu.uni.avatov.guichetetudiant.GuichetEtudiant;
-import lu.uni.avatov.guichetetudiant.OkHttpBackend;
+
+/**
+ * Performs a database update. This can be done either synchronously using {@link #update(Date, Date)}
+ * (this should of corse never be done in the UI thread) or asynchronously using
+ * {@link #asyncUpdate(UpdateListener, Date, Date)}. In the latter case, an UpdateListener is
+ * required to be passed. This does not cause a memory leak as the reference is destroyed as soon as
+ * the update is complete (or fails). When the update completes successfully,
+ * {@link UpdateListener#onUpdateFinished(Date, Date)} will be called; in case of error,
+ * {@link UpdateListener#onUpdateError(Exception)} will be called instead.
+ */
 
 public class Updater {
 
+    /**
+     * Perform a synchronous database update on a given date range. This should never be called from
+     * the UI thread.
+     * @param start The start of the date range.
+     * @param end The end of the date range.
+     * @throws GEError In case of any error in {@link lu.uni.avatov.guichetetudiant.GuichetEtudiant}.
+     */
     public static void update(Date start, Date end) throws GEError {
 
         //Date timeStarted = Calendar.getInstance().getTime();
-        GuichetEtudiant g = new GuichetEtudiant(new OkHttpBackend());
-        g.authenticate(Settings.username(), Settings.password());
+        GuichetEtudiant g = App.guichetEtudiant();
+        if(!g.isAuthenticated())
+            g.authenticate(Settings.username(), Settings.password());
         List<Event> events = Event.convertGEEventList(
                 g.getEvents(
                     start,
@@ -31,19 +48,28 @@ public class Updater {
 
 
     }
-
+    /**
+     * Perform an asynchronous database update on a given date range.
+     * @param start The start of the date range.
+     * @param end The end of the date range.
+     * @throws GEError In case of any error in {@link lu.uni.avatov.guichetetudiant.GuichetEtudiant}.
+     */
     public static void asyncUpdate(UpdateListener listener, Date start, Date end) {
         System.err.println("Updater: update requested between " + start + " and " + end);
         new AsyncUpdate(listener, start,end).execute();
     }
 
-    public static void asyncUpdate(UpdateListener listener) {
-        Date start = Utils.firstDayOfMonth(Utils.Month.CURRENT_MONTH);
-        Date end = Utils.lastDayOfMonth(Utils.Month.NEXT_MONTH);
-        asyncUpdate(listener, start, end);
-    }
+//    public static void asyncUpdate(UpdateListener listener) {
+//        Date start = Utils.firstDayOfMonth(Utils.Month.CURRENT_MONTH);
+//        Date end = Utils.lastDayOfMonth(Utils.Month.NEXT_MONTH);
+//        asyncUpdate(listener, start, end);
+//    }
 
-    public static class AsyncUpdate extends AsyncTask<Void, Void, Boolean> {
+
+    /**
+     * Used by {@link UpdateListener#asyncUpdate(UpdateListener, Date, Date)}. Do not use directly.
+     */
+    private static class AsyncUpdate extends AsyncTask<Void, Void, Boolean> {
         UpdateListener listener;
         private Date start, end;
         private Exception error;

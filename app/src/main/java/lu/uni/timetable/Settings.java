@@ -5,6 +5,9 @@ import java.util.List;
 
 import lu.uni.avatov.guichetetudiant.Credentials;
 
+/**
+ * Stores and retrieves user settings
+ */
 public class Settings {
     public Settings() {
         //Initialise settings

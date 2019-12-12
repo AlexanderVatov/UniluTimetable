@@ -23,6 +23,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * A fragment showing the timetable. It is embedded in the main activity.
+ */
 public class TimetableFragment
         extends Fragment
         implements ITimetableView,

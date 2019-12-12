@@ -5,6 +5,10 @@ import android.content.Intent;
 
 import java.util.Date;
 
+/**
+ * Constructs an Intent containing all the fields of an event, and extracts these fields from
+ * an Intent constructed using this class.
+ */
 public class EventIntent extends Intent {
     public static final String start = "lu.uni.timetable.start";
     public static final String end = "lu.uni.timetable.end";
@@ -18,7 +22,14 @@ public class EventIntent extends Intent {
     public static final String main_program_id = "lu.uni.timetable.main_program_id";
     public static final String time_added = "lu.uni.timetable.time_added";
 
-    
+    /**
+     * Constructs an Intent containing all the fields of an event, and extracts these fields from
+     * an Intent constructed using this class.
+     * @param event The event to be represented
+     * @param context The context of the caller
+     * @param cls The class used for constructing the Intent
+     * @return A non-null intent
+     */
     public static Intent newIntent (Event event, Context context, Class<?> cls) {
         Intent i = new Intent(context, cls);
         i.putExtra(start, event.getStart().getTime());
@@ -36,6 +47,11 @@ public class EventIntent extends Intent {
         return i;
     }
 
+    /**
+     * Extracts the fields of an event from an Intent constructed using this class.
+     * @param intent The Intent from which the fields are to be extracted.
+     * @return A non-null event
+     */
     public static Event getEvent(Intent intent) {
         Event e = new Event();
 
