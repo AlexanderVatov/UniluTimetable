@@ -13,7 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.List;
 
 public class EventDetailsActivity extends AppCompatActivity {
+    final int FIELD_PADDING_DP = 8;
+    final int FIELD_DRAWABLE_PADDING_DP = 6;
+
     private String buildingCode = "";
+    Event e;
+    EventFormatter formatter;
 
 
     @Override
@@ -22,13 +27,14 @@ public class EventDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
         System.err.println("EventDetailsActivity: just created!");
-        Event e = EventIntent.getEvent(getIntent());
+        e = EventIntent.getEvent(getIntent());
 
-        EventFormatter formatter = new EventFormatter(this, e);
+        formatter = new EventFormatter(this, e);
         String title = formatter.getTitle();
         String subject = formatter.getSubject();
         String building = formatter.getBuilding();
         String room = formatter.getRoom();
+        String roomCode = formatter.getRoomCode();
         String timeRange = formatter.getTimeRange();
         String date = formatter.getDate();
         String type = formatter.getType();
@@ -47,6 +53,8 @@ public class EventDetailsActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.buildingView)).setText(building);
 
         ((TextView) findViewById(R.id.roomView)).setText(room);
+        if(!buildingCode.equals("MSA"))
+            findViewById(R.id.roomMapButton).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.timeRangeView)).setText(timeRange);
 
         if (date.isEmpty()) {
@@ -66,8 +74,8 @@ public class EventDetailsActivity extends AppCompatActivity {
             t.setCompoundDrawablesWithIntrinsicBounds(
                     getDrawable(R.drawable.event_lecturer), null, null, null);
             float density = getResources().getDisplayMetrics().density;
-            t.setPadding(0,0,0, ((int) (8*density)));
-            t.setCompoundDrawablePadding(((int) (6*density)));
+            t.setPadding(0,0,0, ((int) (FIELD_PADDING_DP*density)));
+            t.setCompoundDrawablePadding(((int) (FIELD_DRAWABLE_PADDING_DP*density)));
             layout.addView(t);
 
         }
@@ -75,7 +83,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
 
 
-    public void showMap(View view) {
+    public void showBuildingMap(View view) {
         System.err.println("EventDetailsActivity.showMap");
         if (buildingCode.isEmpty()) return; //This should never actually happen
 
@@ -93,6 +101,11 @@ public class EventDetailsActivity extends AppCompatActivity {
         } catch (NullPointerException ex) {
             System.err.println("No address is known for building \"" + buildingCode + "\"!");
         }
+    }
 
+    public void showRoomMap(View view) {
+        Intent intent = new Intent(this,RoomMapActivity.class);
+        intent.putExtra(EventIntent.room, formatter.getRoomCode());
+        startActivity(intent);
     }
 }

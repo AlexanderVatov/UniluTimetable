@@ -69,6 +69,19 @@ public class EventFormatter {
     }
 
     /**
+     * The code of the building in which the event takes place (e.g. MSA, MNO, etc.).
+     * For a human-readable version, use {@link #getBuilding()}.
+     * If the location provided by {@link Event#getRoom()} cannot be correctly parsed,
+     * an empty string will be returned instead.
+     * @return A non-null string
+     */
+    public String getBuildingCode() {
+        if(buildingCode != null) return buildingCode;
+        formatBuildingRoom();
+        return buildingCode;
+    }
+
+    /**
      * The room in which the event takes place.
      * If the location provided by {@link Event#getRoom()} cannot be correctly parsed,
      * the entire location will be returned instead.
@@ -78,6 +91,19 @@ public class EventFormatter {
         if(room != null) return room;
         formatBuildingRoom();
         return room;
+    }
+
+    /**
+     * The code of the room in which the event takes place (e.g. "3.370").
+     * For a human-readable version, use {@link #getRoom()} ()}.
+     * If the location provided by {@link Event#getRoom()} cannot be correctly parsed,
+     * an empty string will be returned instead.
+     * @return A non-null string
+     */
+    public String getRoomCode() {
+        if(roomCode != null) return roomCode;
+        formatBuildingRoom();
+        return roomCode;
     }
 
     /**
@@ -162,20 +188,6 @@ public class EventFormatter {
         return lecturers;
     }
 
-
-    /**
-     * The code of the building in which the event takes place (e.g. MSA, MNO, etc.).
-     * For a human-readable version, use {@link #getBuilding()}.
-     * If the location provided by {@link Event#getRoom()} cannot be correctly parsed,
-     * an empty string will be returned instead.
-     * @return A non-null string
-     */
-    public String getBuildingCode() {
-        if(buildingCode != null) return buildingCode;
-        formatBuildingRoom();
-        return buildingCode;
-    }
-
     /**
      * Used internally.
      */
@@ -183,13 +195,15 @@ public class EventFormatter {
         String[] locationParts = e.getRoom().replaceFirst("^[ \\t]+", "").split(" ", 2);
         try {
             buildingCode = locationParts[0];
-            room = c.getString(R.string.event_room) + ' ' + locationParts[1];
-
+            roomCode = locationParts[1];
             building = Constants.buildingNames.get(buildingCode);
+            room = c.getString(R.string.event_room) + ' ' + roomCode;
+
             if (building == null) {
                 building = "";
                 buildingCode = "";
                 room = e.getRoom();
+                roomCode = "";
             }
         } catch (ArrayIndexOutOfBoundsException ex) {
             building = "";
@@ -216,8 +230,6 @@ public class EventFormatter {
     }
     private Event e;
     private Context c;
-    private String title, subject, building, room, timeRange, date, type;
+    private String title, subject, building, buildingCode, room, roomCode, timeRange, date, type;
     private List<String> lecturers;
-
-    private String buildingCode;
 }
