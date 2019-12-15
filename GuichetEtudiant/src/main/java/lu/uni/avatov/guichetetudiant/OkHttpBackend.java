@@ -14,13 +14,13 @@ import okhttp3.Response;
 
 public class OkHttpBackend implements GuichetEtudiant.NetworkBackend  {
 	private static final String CLASS_TAG = "OkHttpBackend";
-	private String username;
-	private String password;
 	private CookieJar cookieJar;
 	private OkHttpClient client;
+	private OkHttpAuthenticator authenticator;
 
 	public OkHttpBackend() {
 		cookieJar = new OkHttpCookieJar();
+		authenticator = new OkHttpAuthenticator();
 	}
 
 	private OkHttpClient getClient() {
@@ -47,22 +47,23 @@ public class OkHttpBackend implements GuichetEtudiant.NetworkBackend  {
 			}
 		});
 
-		httpClientBuilder.addInterceptor(new Interceptor() {
-			@Override
-			public Response intercept(Chain chain) throws IOException
-			{
-				Request request = chain.request();
+//		httpClientBuilder.addInterceptor(new Interceptor() {
+//			@Override
+//			public Response intercept(Chain chain) throws IOException
+//			{
+//				Request request = chain.request();
+//
+//				Request requestWithUserAgent = request.newBuilder()
+//					.header("User-Agent", System.getProperty("http.agent"))
+//					.build();
+//
+//				return chain.proceed(requestWithUserAgent);
+//			}
+//		});
 
-				Request requestWithUserAgent = request.newBuilder()
-					.header("User-Agent", System.getProperty("http.agent"))
-					.build();
 
-				return chain.proceed(requestWithUserAgent);
-			}
-		});
 
-		if (!username.equals(""))
-			httpClientBuilder.authenticator(new OkHttpAuthenticator(username, password));
+		httpClientBuilder.authenticator(authenticator);
 
 		client = httpClientBuilder.build();
 		return client;
@@ -99,6 +100,7 @@ public class OkHttpBackend implements GuichetEtudiant.NetworkBackend  {
 				return response.body().string();
 		}
 		catch (IOException e) {
+			e.printStackTrace();
 			throw new GEError("Guichet Étudiant: An IOException occurred: " + e.toString());
 		}
 	}
@@ -142,8 +144,6 @@ public class OkHttpBackend implements GuichetEtudiant.NetworkBackend  {
 
 	@Override
 	public void setCredentials(String username, String password) {
-		this.username = username;
-		this.password = password;
-
+		authenticator.set(username, password);
 	}
 }

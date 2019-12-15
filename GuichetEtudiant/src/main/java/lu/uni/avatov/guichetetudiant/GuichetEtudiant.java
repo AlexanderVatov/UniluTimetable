@@ -121,6 +121,9 @@ public class GuichetEtudiant {
      * @throws GEAuthenticationError In case of an authentication error.
      */
     public void authenticate(String username, String password) throws GEError {
+        if (username.equals(""))
+            throw new GEAuthenticationError("GuichetEtudiant: blank username!");
+
         networkBackend.setCredentials(username, password);
         String html = networkBackend.get("Agenda");
         Document doc = Jsoup.parse(html);

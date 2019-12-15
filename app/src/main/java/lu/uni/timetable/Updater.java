@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import lu.uni.avatov.guichetetudiant.GEAuthenticationError;
 import lu.uni.avatov.guichetetudiant.GEError;
 import lu.uni.avatov.guichetetudiant.GEStudyProgram;
 import lu.uni.avatov.guichetetudiant.GuichetEtudiant;
@@ -40,8 +41,7 @@ public class Updater {
         String password = encryptedPreferences.getString(Settings.PASSWORD, "");
 
         if(username.isEmpty() || password.isEmpty()) {
-            System.err.println("Blank credentials returned by EncryptedSharedPreferences!");
-            return;
+            throw new GEAuthenticationError("Blank credentials returned by EncryptedSharedPreferences!");
         }
 
         GuichetEtudiant g = App.guichetEtudiant();

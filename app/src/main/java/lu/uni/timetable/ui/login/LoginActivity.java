@@ -50,7 +50,9 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 loginButton.setEnabled(loginFormState.isDataValid());
                 if (loginFormState.getUsernameError() != null) {
-                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
+                    if(usernameEditText.getText().length() != 0) {
+                        usernameEditText.setError(getString(loginFormState.getUsernameError()));
+                    }
                 }
 //                if (loginFormState.getPasswordError() != null) {
 //                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
@@ -67,14 +69,17 @@ public class LoginActivity extends AppCompatActivity {
                 loadingProgressBar.setVisibility(View.GONE);
                 if (loginResult.getError() != null) {
                     showLoginFailed(loginResult.getError());
+                    usernameEditText.setText("");
+                    passwordEditText.setText("");
+                    usernameEditText.requestFocus();
+
                 }
                 if (loginResult.getSuccess() != null) {
                     updateUiWithUser(loginResult.getSuccess());
+                    setResult(Activity.RESULT_OK);
+                    finish();
                 }
-                setResult(Activity.RESULT_OK);
 
-                //Complete and destroy login activity once successful
-                finish();
             }
         });
 

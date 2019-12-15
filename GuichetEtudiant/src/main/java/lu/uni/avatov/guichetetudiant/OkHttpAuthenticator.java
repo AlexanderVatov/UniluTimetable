@@ -38,22 +38,33 @@ public class OkHttpAuthenticator implements Authenticator
 	private String m_domain;
 	private String m_workstation;
 
-	private int m_contaAutenticazioni;
+	private int m_authenticationCount;
 	private HttpUrl m_url;
 
-	public OkHttpAuthenticator(@NonNull String login, @NonNull String password)
-	{
-		this(login, password, "", "");
+	public OkHttpAuthenticator() {
+		set("","","","");
 	}
 
-	public OkHttpAuthenticator(@NonNull String login, @NonNull String password, @NonNull String domain, @NonNull String workstation)
-	{
+	public OkHttpAuthenticator(@NonNull String login, @NonNull String password) {
+		set(login, password, "", "");
+	}
+
+	public OkHttpAuthenticator(@NonNull String login, @NonNull String password, @NonNull String domain, @NonNull String workstation) {
+		set(login, password, domain, workstation);
+	}
+
+
+	public void set(@NonNull String login, @NonNull String password) {
+		set(login, password, "", "");
+	}
+
+	public void set(@NonNull String login, @NonNull String password, @NonNull String domain, @NonNull String workstation) {
 		m_login = login;
 		m_password = password;
 		m_domain = domain;
 		m_workstation = workstation;
 
-		m_contaAutenticazioni = 0;
+		m_authenticationCount = 0;
 	}
 
 	@Override
@@ -61,14 +72,14 @@ public class OkHttpAuthenticator implements Authenticator
 	{
 		if (m_url == null || response.request().url() != m_url)
 		{
-			m_contaAutenticazioni = 0;
+			m_authenticationCount = 0;
 			m_url = response.request().url();
 		}
 
-		m_contaAutenticazioni++;
+		m_authenticationCount++;
 
-		if (m_contaAutenticazioni >= 4)
-			throw new IOException(String.format("challenge request count too big (%s)", m_contaAutenticazioni));
+		if (m_authenticationCount >= 4)
+			throw new IOException(String.format("challenge request count too big (%s)", m_authenticationCount));
 
 		List<String> authHeaders = response.headers(AUTHENTICATE_HEADERS);
 

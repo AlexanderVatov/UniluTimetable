@@ -80,6 +80,7 @@ public class LoginViewModel extends ViewModel {
 
             } catch (GEError e) {
                 System.err.println("Error authenticating");
+                e.printStackTrace();
                 return false;
             }
         }
