@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements TimetableFragment
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode == LOGIN_REQUEST_CODE) {
             System.err.println("MainActivity: back from LoginActivity!");
-            update(null);
+            Updater.firstUpdate(this);
         }
     }
 }

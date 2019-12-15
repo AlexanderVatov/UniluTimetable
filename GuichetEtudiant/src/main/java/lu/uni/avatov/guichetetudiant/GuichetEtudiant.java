@@ -212,6 +212,7 @@ public class GuichetEtudiant {
 
         //Prepare parameters
         //Erase time information; GuichetEtudiant does not distinguish it anyway
+        //If Android Studio complains about SimpleDateFormat
         DateFormat requestDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'00:00:00");
         requestDateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Luxembourg"));
         DateFormat responseDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
