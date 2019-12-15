@@ -12,17 +12,13 @@ import lu.uni.avatov.guichetetudiant.GuichetEtudiant;
 import lu.uni.timetable.App;
 import lu.uni.timetable.R;
 import lu.uni.timetable.Settings;
-import lu.uni.timetable.data.LoginRepository;
 
 public class LoginViewModel extends ViewModel {
 
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
-    private LoginRepository loginRepository;
 
-    LoginViewModel(LoginRepository loginRepository) {
-        this.loginRepository = loginRepository;
-    }
+    public LoginViewModel() {}
 
     LiveData<LoginFormState> getLoginFormState() {
         return loginFormState;
@@ -79,6 +75,7 @@ public class LoginViewModel extends ViewModel {
                 GuichetEtudiant g = App.guichetEtudiant();
                 g.authenticate(username, password);
                 fullName = g.getStudentName();
+
                 return true;
 
             } catch (GEError e) {
@@ -90,16 +87,19 @@ public class LoginViewModel extends ViewModel {
         @Override
         protected void onPostExecute(Boolean successful) {
             if(successful) {
-                loginResult.setValue(
-                        new LoginResult(new LoggedInUserView(fullName))
-                );
+                loginResult.setValue(new LoginResult(new LoggedInUserView(fullName)));
                 SharedPreferences.Editor e = Settings.preferences().edit();
                 e.putBoolean(Settings.USER_LOGGED_IN, true);
                 e.putBoolean(Settings.MAIN_UPDATE_NEEDED, true);
                 e.apply();
+
+                e = Settings.encryptedPreferences().edit();
+                e.putString(Settings.USERNAME, username);
+                e.putString(Settings.PASSWORD, password);
+                e.apply();
             }
             else {
-                loginResult.setValue(new LoginResult(1));
+                loginResult.setValue(new LoginResult(R.string.login_failed));
             }
         }
     }

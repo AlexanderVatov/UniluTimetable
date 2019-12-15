@@ -1,5 +1,6 @@
 package lu.uni.timetable;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import java.util.Date;
@@ -31,8 +32,15 @@ public class Updater {
 
         //Date timeStarted = Calendar.getInstance().getTime();
         GuichetEtudiant g = App.guichetEtudiant();
+        SharedPreferences prefs = Settings.encryptedPreferences();
+        String username = prefs.getString(Settings.USERNAME, "");
+        String password = prefs.getString(Settings.PASSWORD, "");
+        if(username.isEmpty() || password.isEmpty()) {
+            System.err.println("Blank credentials returned by EncryptedSharedPreferences!");
+            return;
+        }
         if(!g.isAuthenticated())
-            g.authenticate(Settings.username(), Settings.password());
+            g.authenticate(username, password);
         List<Event> events = Event.convertGEEventList(
                 g.getEvents(
                     start,

@@ -3,10 +3,11 @@ package lu.uni.timetable;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
+
 import java.util.Collections;
 import java.util.List;
-
-import lu.uni.avatov.guichetetudiant.Credentials;
 
 /**
  * Stores and retrieves user settings
@@ -16,6 +17,11 @@ public class Settings {
 
     public static final String MAIN_UPDATE_NEEDED = "MAIN_UPDATE_NEEDED";
     public static final String USER_LOGGED_IN = "USER_LOGGED_IN";
+    public static final String USERNAME = "USERNAME";
+    public static final String PASSWORD = "PASSWORD";
+
+
+    private static EncryptedSharedPreferences encPrefs;
     public Settings() {
 //        //Initialise settings
 //        System.err.println("Settings constructor running...");
@@ -31,13 +37,32 @@ public class Settings {
                 .getSharedPreferences(Settings.PREFERENCE_FILE, Context.MODE_PRIVATE);
     }
 
+    public static SharedPreferences encryptedPreferences() {
+        SharedPreferences p = null;
+        if(encPrefs == null) {
+            try {
+                p = EncryptedSharedPreferences.create(
+                        "secret_shared_prefs",
+                        MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
+                        App.getInstance(),
+                        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM);
+            } catch (Exception e) {
+                System.err.println("An exception occurred while obtaining the encrypted shared preferences:");
+                e.printStackTrace();
+            }
+        }
+        return p;
+    }
+
 
     public static String username() {
-        return Credentials.username;
+        return Settings.encryptedPreferences().getString(Settings.USERNAME, "");
     }
 
     public static String password() {
-        return Credentials.password;
+        System.err.println("Decrypting password...");
+        return encryptedPreferences().getString(PASSWORD, "");
     }
 
     public static List<String> studyProgramIds() {
