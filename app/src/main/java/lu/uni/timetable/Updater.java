@@ -3,10 +3,14 @@ package lu.uni.timetable;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import lu.uni.avatov.guichetetudiant.GEError;
+import lu.uni.avatov.guichetetudiant.GEStudyProgram;
 import lu.uni.avatov.guichetetudiant.GuichetEtudiant;
 
 /**
@@ -31,21 +35,38 @@ public class Updater {
     public static void update(Date start, Date end) throws GEError {
 
         //Date timeStarted = Calendar.getInstance().getTime();
-        GuichetEtudiant g = App.guichetEtudiant();
-        SharedPreferences prefs = Settings.encryptedPreferences();
-        String username = prefs.getString(Settings.USERNAME, "");
-        String password = prefs.getString(Settings.PASSWORD, "");
+        SharedPreferences encryptedPreferences = Settings.encryptedPreferences();
+        String username = encryptedPreferences.getString(Settings.USERNAME, "");
+        String password = encryptedPreferences.getString(Settings.PASSWORD, "");
+
         if(username.isEmpty() || password.isEmpty()) {
             System.err.println("Blank credentials returned by EncryptedSharedPreferences!");
             return;
         }
+
+        GuichetEtudiant g = App.guichetEtudiant();
         if(!g.isAuthenticated())
             g.authenticate(username, password);
+
+        SharedPreferences preferences = Settings.preferences();
+        Set<String> studyProgramIds = preferences.getStringSet(Settings.STUDY_PROGRAMS, null);
+        if(studyProgramIds == null) {
+            System.err.println("Study programs not recorded. Fetching them...");
+            List<GEStudyProgram> list = g.getStudyPrograms();
+            studyProgramIds = new HashSet<>();
+            for(GEStudyProgram p: list) {
+                if (p.isMain) {
+                    studyProgramIds.add(p.id);
+                }
+            }
+            preferences.edit().putStringSet(Settings.STUDY_PROGRAMS, studyProgramIds).apply();
+        }
+
         List<Event> events = Event.convertGEEventList(
                 g.getEvents(
                     start,
                     end,
-                    Settings.studyProgramIds()
+                    new ArrayList<>(studyProgramIds)
                 )
         );
         EventDAO dao = Database.instance().getEventDAO();
