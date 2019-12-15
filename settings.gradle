@@ -1,2 +1,2 @@
-include ':app', ':GuichetEtudiant'
+include ':app', ':GuichetEtudiant', ':watch'
 rootProject.name='Uni.lu Timetable'

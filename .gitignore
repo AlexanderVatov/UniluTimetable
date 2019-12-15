@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 GuichetEtudiant/src/main/java/lu/uni/avatov/guichetetudiant/Credentials.java
+watch/src/main/java/lu/uni/timetable/watch/Credentials.java
+watch/src/main/java/lu/uni/timetable/watch/Credentials.java
