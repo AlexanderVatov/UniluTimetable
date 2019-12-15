@@ -1,5 +1,8 @@
 package lu.uni.timetable;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.os.AsyncTask;
 
 import androidx.collection.ArraySet;
@@ -50,6 +53,14 @@ public class Presenter {
             if (view != null)
                 view.onDatabaseUpdated(start, end);
         }
+
+        //Update widget(s)
+        Intent intent = new Intent(App.getInstance(), Widget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = AppWidgetManager.getInstance(App.getInstance())
+                .getAppWidgetIds(new ComponentName(App.getInstance(),Widget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        App.getInstance().sendBroadcast(intent);
     }
 
     /**
@@ -65,6 +76,40 @@ public class Presenter {
         new DatabaseQuery(view, start, end).execute();
     }
 
+    /**
+     * Performs synchronous database queries of events fully comprised between two dates.
+     *
+     * @param start The start of the date range for which events are requested
+     * @param end The end of the date range for which events are requested
+     * @return A list of events fully comprised between start and end.
+     */
+    public List<Event> synchronousRequestEvents(Date start, Date end) {
+        EventDAO dao = Database.instance().getEventDAO();
+        if(start == null || end == null)
+            return dao.getAllEvents();
+        return dao.getEventsBetweenDates(start,end);
+    }
+
+    /**
+     * Performs synchronous database queries of events partially comprised between two dates.
+     *
+     * @param start The start of the date range for which events are requested
+     * @param end The end of the date range for which events are requested
+     * @return A list of events fully comprised between start and end
+     */
+    public List<Event> synchronousRequestOngoingEvents(Date start, Date end) {
+        return Database.instance().getEventDAO().getOngoingEventsBetween(start, end);
+    }
+
+    /**
+     * Performs synchronous database queries of events ongoing at a moment in time.
+     *
+     * @param moment The particular moment in time for which events are requested
+     * @return A list of events ongoing at the given moment
+     */
+    public List<Event> synchronousRequestOngoingEvents(Date moment) {
+        return Database.instance().getEventDAO().getOngoingEventsAt(moment);
+    }
     /**
      * Convenience method which requests events in the current day. Its behaviour is otherwise the
      * same as {@link #requestEvents(WeakReference, Date, Date)}.
@@ -136,10 +181,7 @@ public class Presenter {
 
         @Override
         protected List<Event> doInBackground(Void... voids) {
-            EventDAO dao = Database.instance().getEventDAO();
-            if(start == null || end == null)
-                return dao.getAllEvents();
-            return dao.getEventsBetweenDates(start,end);
+            return synchronousRequestEvents(start,end);
         }
 
         @Override

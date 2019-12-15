@@ -110,6 +110,34 @@ public class Utils {
     }
 
     /**
+     * Returns the time 00:00:00 on a given day
+     * @param day A Date object representing the given date. Its time components will be disregarded.
+     * @return A Date object representing the time 00:00:00 on the given day.
+     */
+    public static Date startOfDay(Date day) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(day);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        return c.getTime();
+    }
+
+    /**
+     * Returns the time 23:59:59 on a given day
+     * @param day A Date object representing the given date. Its time components will be disregarded.
+     * @return A Date object representing the time 23:59:59 on the given day.
+     */
+    public static Date endOfDay(Date day) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(day);
+        c.set(Calendar.HOUR_OF_DAY, 23);
+        c.set(Calendar.MINUTE, 59);
+        c.set(Calendar.SECOND, 59);
+        return c.getTime();
+    }
+
+    /**
      * Converts a string to sentence case, i.e. with the first character of each word in uppercase
      * and subsequent characters of the same word in lowercase. Words are considered to be strings
      * of arbitrary consecutive characters not contained in wordSeparators. If a character is

@@ -74,6 +74,8 @@ public class Updater {
             dao.upsert(e); //If an event with the same id already exists, it will be updated
         }
         System.err.println("Updater: Inserted " + events.size() + " events!");
+
+
     }
 
     /**

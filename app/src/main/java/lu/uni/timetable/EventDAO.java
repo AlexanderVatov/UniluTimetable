@@ -30,6 +30,12 @@ public interface EventDAO {
     @Query("SELECT * FROM events WHERE (start>= :start AND `end` <= :end )")
     public List<Event> getEventsBetweenDates(Date start, Date end);
 
+    @Query("SELECT * FROM events WHERE (start <= :moment AND `end` >= :moment)")
+    public List<Event> getOngoingEventsAt(Date moment);
+
+    @Query("SELECT * FROM events WHERE ((`end` >= :start AND `end` <= :end) OR (start >= :start AND start <= :start))")
+    public List<Event> getOngoingEventsBetween(Date start, Date end);
+
     @Query("SELECT * FROM events")
     public List<Event> getAllEvents();
 }
