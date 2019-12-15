@@ -17,8 +17,8 @@ public class EventDetailsActivity extends AppCompatActivity {
     final int FIELD_DRAWABLE_PADDING_DP = 6;
 
     private String buildingCode = "";
+    private String roomCode = "";
     Event e;
-    EventFormatter formatter;
 
 
     @Override
@@ -29,12 +29,12 @@ public class EventDetailsActivity extends AppCompatActivity {
         System.err.println("EventDetailsActivity: just created!");
         e = EventIntent.getEvent(getIntent());
 
-        formatter = new EventFormatter(this, e);
+        EventFormatter formatter = new EventFormatter(this, e);
         String title = formatter.getTitle();
         String subject = formatter.getSubject();
         String building = formatter.getBuilding();
         String room = formatter.getRoom();
-        String roomCode = formatter.getRoomCode();
+        this.roomCode = formatter.getRoomCode();
         String timeRange = formatter.getTimeRange();
         String date = formatter.getDate();
         String type = formatter.getType();
@@ -85,7 +85,8 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     public void showBuildingMap(View view) {
         System.err.println("EventDetailsActivity.showMap");
-        if (buildingCode.isEmpty()) return; //This should never actually happen
+        if (buildingCode.isEmpty()) return; //This should never actually happen, as the map button
+        //is hidden when buildingCode is empty.
 
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.buildingGoogleMapsUris.get(buildingCode)));
@@ -105,7 +106,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     public void showRoomMap(View view) {
         Intent intent = new Intent(this,RoomMapActivity.class);
-        intent.putExtra(EventIntent.room, formatter.getRoomCode());
+        intent.putExtra(EventIntent.room, roomCode);
         startActivity(intent);
     }
 }

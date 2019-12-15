@@ -45,8 +45,15 @@ public class Updater {
             dao.upsert(e); //If an event with the same id already exists, it will be updated
         }
         System.err.println("Updater: Inserted " + events.size() + " events!");
+    }
 
-
+    /**
+     * Asynchronously performs the first update after a user has logged in.
+     */
+    public static void firstUpdate(UpdateListener listener) {
+        asyncUpdate(listener,
+                Utils.firstDayOfMonth(Utils.Month.LAST_MONTH),
+                Utils.lastDayOfMonth(Utils.Month.NEXT_MONTH));
     }
     /**
      * Perform an asynchronous database update on a given date range.

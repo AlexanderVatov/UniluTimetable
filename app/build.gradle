@@ -33,6 +33,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     implementation "android.arch.persistence.room:runtime:1.0.0"
+    implementation 'androidx.annotation:annotation:1.0.2'
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
@@ -42,7 +43,7 @@ dependencies {
     implementation 'com.github.thellmund.Android-Week-View:core:4.0.1'
     //implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.11.0'
     implementation project(path: ':GuichetEtudiant')
-    implementation "androidx.core:core-ktx:+"
+    implementation "androidx.core:core-ktx:1.1.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'sysu.mobile.limk:indoormapview:0.24'

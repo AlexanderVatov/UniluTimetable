@@ -23,8 +23,10 @@ public class App extends Application {
     private static GuichetEtudiant _guichet;
 
     public App() {
+        super();
         inst = this;
         //Initialise settings
+        System.err.println("Initialising Settings...");
         _settings = new Settings();
     }
 
@@ -44,7 +46,7 @@ public class App extends Application {
      * @return A non-null reference to a {@link lu.uni.avatov.guichetetudiant.GuichetEtudiant}.
      */
     public static GuichetEtudiant guichetEtudiant() {
-        if (_guichet != null) _guichet = new GuichetEtudiant(new OkHttpBackend());
+        if (_guichet == null) _guichet = new GuichetEtudiant(new OkHttpBackend());
         return _guichet;
     }
 
@@ -54,7 +56,7 @@ public class App extends Application {
      *
      * @return A non-null reference to a {@link lu.uni.timetable.Settings}.
      */
-    public static Settings getSettings() { return _settings;}
+    public static Settings settings() { return _settings;}
 
 
 }

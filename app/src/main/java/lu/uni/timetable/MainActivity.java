@@ -1,5 +1,7 @@
 package lu.uni.timetable;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,7 +19,12 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-public class MainActivity extends AppCompatActivity implements TimetableFragment.ITimetableFragmentObserver {
+import java.util.Date;
+
+import lu.uni.timetable.ui.login.LoginActivity;
+
+public class MainActivity extends AppCompatActivity implements TimetableFragment.ITimetableFragmentObserver, Updater.UpdateListener {
+    static final int LOGIN_REQUEST_CODE = 27;
     enum ViewOption {
         View1Day,
         View3Days,
@@ -34,12 +41,15 @@ public class MainActivity extends AppCompatActivity implements TimetableFragment
     private MenuItem viewOptionMenu;
     private boolean landscapeOrientation;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.err.println("MainActivity: Just created!");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        System.err.println("MainActivity: Getting preferences...");
+        SharedPreferences prefs = Settings.preferences();
+        System.err.println("MainActivity: Got preferences: " + prefs);
 
         updateButton = findViewById(R.id.updateButton);
         updateButtonAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_update_button);
@@ -52,11 +62,17 @@ public class MainActivity extends AppCompatActivity implements TimetableFragment
             portraitViewOption = ViewOption.View3Days;
             timetableFragment.getWeekView().setNumberOfVisibleDays(3);
         }
-    }
 
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
+        if(!prefs.getBoolean(Settings.USER_LOGGED_IN, false)) {
+            System.err.println("User not logged in!");
+            startActivityForResult(new Intent(this, LoginActivity.class),LOGIN_REQUEST_CODE);
+        }
+        else if(Settings.preferences().getBoolean(Settings.MAIN_UPDATE_NEEDED, true)) {
+            System.err.println("Update needed!");
+            Updater.firstUpdate(this);
+            updateRunning = true;
+            updateButton.startAnimation(updateButtonAnimation);
+        }
     }
 
     @Override
@@ -69,6 +85,9 @@ public class MainActivity extends AppCompatActivity implements TimetableFragment
     }
 
     public void update(View view) {
+        //For future: if you ever use view, note that it can be null, since this function is not only
+        //used as a callback
+
         if(
                 !updateRunning //Do not update if an update is already in progress
                 && timetableFragment != null //Perhaps if the user manages to press the update updateButton
@@ -86,6 +105,13 @@ public class MainActivity extends AppCompatActivity implements TimetableFragment
         Snackbar.make(findViewById(R.id.coordinatorLayout), getString(R.string.update_finished), Snackbar.LENGTH_SHORT).show();
         updateButton.clearAnimation();
         updateRunning = false;
+        Settings.preferences().edit().putBoolean(Settings.MAIN_UPDATE_NEEDED, false).apply();
+    }
+
+    @Override
+    public void onUpdateFinished(Date startDate, Date endDate) {
+        //This is called by Updater when the first database update after user login has finished
+        onUpdateFinished();
     }
 
     @Override
@@ -135,7 +161,6 @@ public class MainActivity extends AppCompatActivity implements TimetableFragment
                             viewOptionMenu.setTitle(R.string.view_5days);
                     }
 
-
                 }
                 else {
                     if (portraitViewOption == ViewOption.View1Day) {
@@ -159,6 +184,14 @@ public class MainActivity extends AppCompatActivity implements TimetableFragment
     public void onConfigurationChanged(Configuration newConfig) {
         if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             timetableFragment.getWeekView().setNumberOfVisibleDays(5);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == LOGIN_REQUEST_CODE) {
+            System.err.println("MainActivity: back from LoginActivity!");
+            update(null);
         }
     }
 }

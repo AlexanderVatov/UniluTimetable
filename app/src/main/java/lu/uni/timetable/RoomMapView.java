@@ -25,6 +25,8 @@ public class RoomMapView extends CustomMapView {
     }
 
     public static Position locateRoomFloor2(int roomNumber) {
+        //These could have been in a resource file, in a hash map, etc.,
+        //but with this number of rooms, this is probably the most efficient way
         switch(roomNumber) {
             case 130: return new Position(90, 463);
             case 140: return new Position(98, 372);
@@ -70,6 +72,8 @@ public class RoomMapView extends CustomMapView {
     }
 
     public static Position locateRoomFloor3(int roomNumber) {
+        //These could have been in a resource file, in a hash map, etc.,
+        //but with this number of rooms, this is probably the most efficient way
         switch(roomNumber) {
             case 500: return new Position(1024, 339);
             case 510: return new Position(761, 339);
@@ -103,6 +107,8 @@ public class RoomMapView extends CustomMapView {
     }
 
     public static Position locateRoomFloor4(int roomNumber) {
+        //These could have been in a resource file, in a hash map, etc.,
+        //but with this number of rooms, this is probably the most efficient way
         switch(roomNumber) {
             case 120: return new Position(88, 213);
             case 90:  return new Position(90, 450);
@@ -181,7 +187,10 @@ public class RoomMapView extends CustomMapView {
 
         try {
             initNewMap(c.getAssets().open("ms_floor" + parts[0] + ".png"), 1, 0, position);
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+            System.err.println("Could not find file \"ms_floor" + parts[0] + ".png\"!");
+            System.err.println("It must be added as a resource at compile-time.");
+        }
 
     }
 }

@@ -64,9 +64,9 @@ public class TimetableFragment
         Date start = Utils.firstDayOfMonth(Utils.Month.CURRENT_MONTH);
         Date end = Utils.lastDayOfMonth(Utils.Month.NEXT_MONTH);
 
-        Date lastVisible = weekView.getLastVisibleDate().getTime();
-        if (lastVisible.after(end)) {
-            end = Utils.lastDayOfMonth(lastVisible);
+        Calendar lastVisible = weekView.getLastVisibleDate();//.getTime();
+        if (lastVisible != null && lastVisible.after(end)) {
+            end = Utils.lastDayOfMonth(lastVisible.getTime());
         }
         Updater.asyncUpdate(this, start, end);
     }
