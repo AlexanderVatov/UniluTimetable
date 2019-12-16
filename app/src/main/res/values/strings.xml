@@ -26,4 +26,6 @@
     <string name="prompt_username">Username</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="sync_calendar">Sync calendar</string>
+    <string name="sign_out">Sign out</string>
 </resources>

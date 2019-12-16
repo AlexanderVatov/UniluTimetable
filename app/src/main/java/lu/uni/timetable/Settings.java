@@ -51,4 +51,8 @@ public class Settings {
         return encPrefs;
     }
 
+    public static void deleteUserData() {
+        Database.instance().getEventDAO().deleteAllEvents();
+    }
+
 }

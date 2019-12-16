@@ -47,9 +47,7 @@ public class MainActivity extends AppCompatActivity implements TimetableFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        System.err.println("MainActivity: Getting preferences...");
         SharedPreferences prefs = Settings.preferences();
-        System.err.println("MainActivity: Got preferences: " + prefs);
 
         updateButton = findViewById(R.id.updateButton);
         updateButtonAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_update_button);
@@ -175,6 +173,17 @@ public class MainActivity extends AppCompatActivity implements TimetableFragment
                         timetableFragment.getWeekView().setNumberOfVisibleDays(1);
                     }
                 }
+                return true;
+            case R.id.action_sync_calendar:
+//                CalendarSync.test(this);
+//                CalendarSync.testAdd(this);
+                CalendarSync.testQuery(this);
+                return true;
+
+            case R.id.action_logout:
+                System.err.println("Logging out!");
+                Settings.deleteUserData();
+                startActivityForResult(new Intent(this, LoginActivity.class),LOGIN_REQUEST_CODE);
             default:
                 return super.onOptionsItemSelected(item);
         }

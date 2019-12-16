@@ -49,6 +49,7 @@ public class Widget extends AppWidgetProvider {
 
             views.setTextViewText(R.id.roomCell, b.toString());
             views.setTextViewText(R.id.subjectCell, e.getTitle());
+            views.setViewVisibility(R.id.subjectCell, View.VISIBLE);
         }
 
         // Instruct the widget manager to update the widget
