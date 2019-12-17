@@ -9,9 +9,9 @@ android {
         applicationId "lu.uni.timetable"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+//        versionCode 1
+//        versionName "1.0"
+//        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -23,6 +23,11 @@ android {
         sourceCompatibility = 1.7
         targetCompatibility = 1.7
     }
+
+    useLibrary 'android.test.runner'
+
+    useLibrary 'android.test.base'
+    useLibrary 'android.test.mock'
 }
 
 dependencies {
@@ -48,6 +53,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'sysu.mobile.limk:indoormapview:0.24'
+//
+//    testImplementation 'junit:junit:4.12'
+//    testImplementation "androidx.test.runner.AndroidJUnitRunner"
 
 }
 repositories {

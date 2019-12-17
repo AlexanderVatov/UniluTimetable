@@ -53,6 +53,10 @@ public class Settings {
 
     public static void deleteUserData() {
         Database.instance().getEventDAO().deleteAllEvents();
+
+        preferences().edit().putBoolean(USER_LOGGED_IN, false).apply();
+
+        encryptedPreferences().edit().clear().apply();
     }
 
 }

@@ -71,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements TimetableFragment
             updateRunning = true;
             updateButton.startAnimation(updateButtonAnimation);
         }
+
+        NightlyUpdate.setNextAlarm();
     }
 
     @Override
@@ -178,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements TimetableFragment
 //                CalendarSync.test(this);
 //                CalendarSync.testAdd(this);
                 CalendarSync.testQuery(this);
+
                 return true;
 
             case R.id.action_logout:
