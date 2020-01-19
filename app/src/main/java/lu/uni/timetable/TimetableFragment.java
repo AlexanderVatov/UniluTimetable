@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class TimetableFragment
         extends Fragment
-        implements ITimetableView,
+        implements Presenter.Observer,
                    Updater.UpdateListener,
                    OnLoadMoreListener,
                    OnEventClickListener<Event> {
@@ -47,11 +47,11 @@ public class TimetableFragment
                              @Nullable Bundle savedInstanceState) {
 
         presenter = Presenter.getInstance();
-        presenter.register(new WeakReference<ITimetableView>(this));
+        presenter.register(new WeakReference<Presenter.Observer>(this));
 
         parentView = inflater.inflate(R.layout.timetable_fragment, container, false);
         weekView = parentView.findViewById(R.id.weekView);
-        System.err.println("Setting listener...");
+        weekView.goToHour(8);
         weekView.setOnLoadMoreListener(this);
         weekView.setOnEventClickListener(this);
 
@@ -76,7 +76,7 @@ public class TimetableFragment
     public void onDatabaseUpdated(Date startOfUpdatedPeriod, Date endOfUpdatedPeriod) {
 
         System.err.println("TimetableFragment: Notified of an update. Querying fresh data...");
-        presenter.requestEvents(new WeakReference<ITimetableView>(this), startOfUpdatedPeriod, endOfUpdatedPeriod);
+        presenter.requestEvents(new WeakReference<Presenter.Observer>(this), startOfUpdatedPeriod, endOfUpdatedPeriod);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class TimetableFragment
     @Override
     public void onLoadMore(Calendar startCalendar, Calendar endCalendar) {
         System.err.println("Asked for events between " + startCalendar.getTime() + " and " + endCalendar.getTime());
-        presenter.requestEvents(new WeakReference<ITimetableView>(this), startCalendar.getTime(), endCalendar.getTime());
+        presenter.requestEvents(new WeakReference<Presenter.Observer>(this), startCalendar.getTime(), endCalendar.getTime());
     }
 
     @Override

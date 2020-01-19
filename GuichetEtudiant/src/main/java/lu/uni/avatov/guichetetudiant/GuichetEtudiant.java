@@ -121,8 +121,9 @@ public class GuichetEtudiant {
      * @throws GEAuthenticationError In case of an authentication error.
      */
     public void authenticate(String username, String password) throws GEError {
-        if (username.equals(""))
+        if (username.equals("")) {
             throw new GEAuthenticationError("GuichetEtudiant: blank username!");
+        }
 
         networkBackend.setCredentials(username, password);
         String html = networkBackend.get("Agenda");
@@ -134,7 +135,13 @@ public class GuichetEtudiant {
         the lack of either causes requests to the Guichet Étudiant to be rejected with an HTTP 500
         (Internal Server Error) response.
         */
-        token = doc.select("[name=__RequestVerificationToken]").first().attr("value");
+        try {
+            token = doc.select("[name=__RequestVerificationToken]").first().attr("value");
+        } catch (Exception e) {
+            System.err.println("Error obtaining token from Guichet Étudiant response:");
+            System.err.println(html);
+            throw new GEError("Error obtaining token from Guichet Étudiant response");
+        }
         System.err.println("GuichetEtudiant: successfully obtained token!");
     }
 

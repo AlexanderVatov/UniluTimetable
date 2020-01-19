@@ -24,7 +24,8 @@ import java.util.Date;
 import lu.uni.timetable.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity implements TimetableFragment.ITimetableFragmentObserver, Updater.UpdateListener {
-    static final int LOGIN_REQUEST_CODE = 27;
+    static final int LOGIN_REQUEST = 1;
+
     enum ViewOption {
         View1Day,
         View3Days,
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements TimetableFragment
 
         if(!prefs.getBoolean(Settings.USER_LOGGED_IN, false)) {
             System.err.println("User not logged in!");
-            startActivityForResult(new Intent(this, LoginActivity.class),LOGIN_REQUEST_CODE);
+            startActivityForResult(new Intent(this, LoginActivity.class), LOGIN_REQUEST);
         }
         else if(Settings.preferences().getBoolean(Settings.MAIN_UPDATE_NEEDED, true)) {
             System.err.println("Update needed!");
@@ -178,15 +179,15 @@ public class MainActivity extends AppCompatActivity implements TimetableFragment
                 return true;
             case R.id.action_sync_calendar:
 //                CalendarSync.test(this);
-//                CalendarSync.testAdd(this);
-                CalendarSync.testQuery(this);
+                CalendarSync.testAdd(this);
+//                CalendarSync.testQuery(this);
 
                 return true;
 
             case R.id.action_logout:
                 System.err.println("Logging out!");
                 Settings.deleteUserData();
-                startActivityForResult(new Intent(this, LoginActivity.class),LOGIN_REQUEST_CODE);
+                startActivityForResult(new Intent(this, LoginActivity.class), LOGIN_REQUEST);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -201,9 +202,11 @@ public class MainActivity extends AppCompatActivity implements TimetableFragment
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode == LOGIN_REQUEST_CODE) {
-            System.err.println("MainActivity: back from LoginActivity!");
-            Updater.firstUpdate(this);
+        switch(requestCode) {
+            case LOGIN_REQUEST:
+                System.err.println("MainActivity: back from LoginActivity!");
+                Updater.firstUpdate(this);
+                break;
         }
     }
 }

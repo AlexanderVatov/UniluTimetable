@@ -77,21 +77,19 @@ public class CalendarSync {
         }
 
         Calendar beginTime = Calendar.getInstance();
-        beginTime.set(2019, 12, 16, 10, 30);
+        beginTime.set(2020, 0, 10, 10, 30);
 
         Calendar endTime = Calendar.getInstance();
-        endTime.set(2019, 12, 16, 11, 30);
+        endTime.set(2020, 0, 10, 11, 30);
 
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART, beginTime.getTimeInMillis());
         values.put(CalendarContract.Events.DTEND, endTime.getTimeInMillis());
-        values.put(CalendarContract.Events.TITLE, "Test event");
+        values.put(CalendarContract.Events.TITLE, "Test event 3");
         values.put(CalendarContract.Events.DESCRIPTION, "Test description");
         values.put(CalendarContract.Events.CALENDAR_ID, 11);
-        values.put(CalendarContract.Events.EVENT_TIMEZONE, "Europe/Paris");
-//        values.put(CalendarContract.Events.EVENT_LOCATION, "Luxembourg");
-//        values.put(CalendarContract.Events.GUESTS_CAN_INVITE_OTHERS, "1");
-//        values.put(CalendarContract.Events.GUESTS_CAN_SEE_GUESTS, "1");
+        values.put(CalendarContract.Events.EVENT_TIMEZONE, "Europe/Luxembourg");
+        values.put(CalendarContract.Events.EVENT_LOCATION, "Luxembourg");
 
         ContentResolver cr = App.getInstance().getContentResolver();
         System.err.println(cr.insert(CalendarContract.Events.CONTENT_URI, values));
@@ -126,9 +124,11 @@ public class CalendarSync {
 
         cur = cr.query(uri, mProjection, selection, selectionArgs, null);
 
-        for (int i = 1; (i <= 5) && cur.moveToNext(); ++i) {
+        for (int i = 1; (i <= 15) && cur.moveToNext(); ++i) {
             //String title = cur.getString(cur.getColumnIndex(CalendarContract.Events.TITLE));
-            System.err.println(cur.getString(0));
+            for (int j = 0; j < mProjection.length; ++j) {
+                System.err.println(cur.getString(j));
+            }
         }
     }
 }
