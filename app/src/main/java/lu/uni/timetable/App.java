@@ -28,6 +28,7 @@ public class App extends Application {
         //Initialise settings
         System.err.println("Initialising Settings...");
         _settings = new Settings();
+        new CalendarSync();
     }
 
     /**

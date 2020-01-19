@@ -20,16 +20,14 @@ public class GEHTTPBackend implements GuichetEtudiant.NetworkBackend {
         System.err.println("Setting default authenticator...");
         Authenticator.setDefault(authenticator);
         cookieManager = new CookieManager();
-        this.urlPrefix = GuichetEtudiant.urlPrefix;
     }
 
-    public GEHTTPBackend(String urlPrefix, String username, String password) {
+    public GEHTTPBackend(String username, String password) {
         authenticator = new GEAuthenticator(username, password);
         System.err.println("Setting default authenticator...");
         Authenticator.setDefault(authenticator);
         cookieManager = new CookieManager();
         //CookieHandler.setDefault(cookieManager);
-        this.urlPrefix = urlPrefix;
     }
 
     public String get (URL url) throws GEError {
@@ -69,9 +67,9 @@ public class GEHTTPBackend implements GuichetEtudiant.NetworkBackend {
     }
 
     @Override
-    public String get(String urlSuffix) throws GEError {
+    public String get(String url) throws GEError {
         try {
-            return get(new URL(urlPrefix + urlSuffix));
+            return get(new URL(url));
         }
         catch(MalformedURLException e) {
             throw new GEError("Guichet Étudiant Error: Malformed URL");
@@ -131,9 +129,9 @@ public class GEHTTPBackend implements GuichetEtudiant.NetworkBackend {
         }
     }
     @Override
-    public String post(String urlSuffix, ParametersMultimap parameters) throws GEError {
+    public String post(String url, ParametersMultimap parameters) throws GEError {
         try {
-            return post(new URL(urlPrefix + urlSuffix), parameters);
+            return post(new URL(url), parameters);
         }
         catch(MalformedURLException e) {
             throw new GEError("Guichet Étudiant Error: Malformed URL");
@@ -178,15 +176,6 @@ public class GEHTTPBackend implements GuichetEtudiant.NetworkBackend {
         Authenticator.setDefault(authenticator);
     }
 
-
-    public String getUrlPrefix() {
-        return urlPrefix;
-    }
-
-    public void setUrlPrefix(String urlPrefix) {
-        this.urlPrefix = urlPrefix;
-    }
-
     public CookieManager getCookieManager() {
         return cookieManager;
     }
@@ -195,7 +184,6 @@ public class GEHTTPBackend implements GuichetEtudiant.NetworkBackend {
         this.cookieManager = cookieManager;
     }
 
-    private String urlPrefix;
     private GEAuthenticator authenticator;
     private CookieManager cookieManager;
 

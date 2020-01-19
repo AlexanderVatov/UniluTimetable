@@ -2,6 +2,7 @@ package lu.uni.timetable;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -13,9 +14,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.lang.ref.WeakReference;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
-public class CalendarSync {
+public class CalendarSync implements Presenter.Observer {
+    private static CalendarSync _instance;
+    public CalendarSync() {
+        _instance=this;
+        Presenter.getInstance().register(new WeakReference<Presenter.Observer>(this));
+    }
+
     // Projection array. Creating indices for this array instead of doing
 // dynamic lookups improves performance.
     public static final String[] CALENDAR_PROJECTION = new String[] {
@@ -93,8 +103,38 @@ public class CalendarSync {
 
         ContentResolver cr = App.getInstance().getContentResolver();
         System.err.println(cr.insert(CalendarContract.Events.CONTENT_URI, values));
+    }
 
+    public static void updateEvent(Event event) {
+        if (ContextCompat.checkSelfPermission(App.getInstance(), Manifest.permission.WRITE_CALENDAR)
+                != PackageManager.PERMISSION_GRANTED) {
+            System.err.println("No permission to write to calendar!");
+            return;
+        }
 
+        ContentValues values = new ContentValues();
+        values.put(CalendarContract.Events.DTSTART, event.getStart().getTime());
+        values.put(CalendarContract.Events.DTEND, event.getEnd().getTime());
+        values.put(CalendarContract.Events.TITLE, event.getTitle());
+        values.put(CalendarContract.Events.DESCRIPTION, event.getLecturer());
+        values.put(CalendarContract.Events.CALENDAR_ID, 11);
+        values.put(CalendarContract.Events.EVENT_TIMEZONE, "Europe/Luxembourg");
+        values.put(CalendarContract.Events.EVENT_LOCATION, event.getRoom());
+
+        ContentResolver cr = App.getInstance().getContentResolver();
+        Long eventCalendarId = event.getCalendarId();
+        if(eventCalendarId == null) {
+            //If the event has not yet been added to the calendar
+            System.err.println("Adding event to calendar...");
+            Uri insertUri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
+            event.setCalendarId(Long.parseLong(insertUri.getLastPathSegment()));
+            Database.instance().getEventDAO().update(event);
+        }
+        else {
+            System.err.println("Updating event...");
+            Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, event.getCalendarId());
+            cr.update(updateUri, values, null, null);
+        }
     }
 
     public static void testQuery(AppCompatActivity activity) {
@@ -130,5 +170,17 @@ public class CalendarSync {
                 System.err.println(cur.getString(j));
             }
         }
+    }
+
+    @Override
+    public void onDatabaseUpdated(Date startOfUpdatedPeriod, Date endOfUpdatedPeriod) {
+        List<Event>  events = Presenter.synchronousRequestEvents(startOfUpdatedPeriod, endOfUpdatedPeriod);
+        for(Event e: events) updateEvent(e);
+
+    }
+
+    @Override
+    public void onEventsReady(List<Event> events) {
+
     }
 }

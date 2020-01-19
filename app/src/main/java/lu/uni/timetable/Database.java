@@ -6,7 +6,7 @@ import androidx.room.TypeConverter;
 
 import java.util.Date;
 
-@androidx.room.Database(entities = {Event.class}, version = 1, exportSchema = false)
+@androidx.room.Database(entities = {Event.class}, version = 2, exportSchema = false)
 @androidx.room.TypeConverters({Database.TypeConverters.class})
 public abstract class Database extends RoomDatabase {
     public abstract EventDAO getEventDAO();

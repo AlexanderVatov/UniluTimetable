@@ -13,7 +13,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class OkHttpBackend implements GuichetEtudiant.NetworkBackend  {
-	private static final String CLASS_TAG = "OkHttpBackend";
 	private CookieJar cookieJar;
 	private OkHttpClient client;
 	private OkHttpAuthenticator authenticator;
@@ -69,18 +68,19 @@ public class OkHttpBackend implements GuichetEtudiant.NetworkBackend  {
 		return client;
 	}
 
-	protected static URL generateURL(String urlSuffix) throws GEError {
+	protected static URL generateURL(String url) throws GEError {
 		try {
-			return new URL(GuichetEtudiant.urlPrefix + urlSuffix);
+			//return new URL(GuichetEtudiant.urlPrefix + urlSuffix);
+			return new URL(url);
 		} catch(MalformedURLException e) {
 			throw new GEError("Guichet Étudiant Error: Malformed URL");
 		}
 	}
 
 	@Override
-	public String get(String urlSuffix) throws GEError {
+	public String get(String url) throws GEError {
 		OkHttpClient client = getClient();
-		Request request = new Request.Builder().url(generateURL(urlSuffix)).build();
+		Request request = new Request.Builder().url(generateURL(url)).build();
 
 		System.err.println("OkHttpBackend: GET " + request.url());
 

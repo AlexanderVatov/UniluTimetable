@@ -61,8 +61,10 @@ public class Presenter {
 
         for (Iterator<WeakReference<Observer>> it = observers.iterator(); it.hasNext();) {
             Observer observer = it.next().get();
-            if (observer == null)
+            if (observer == null) {
+                System.err.println("Presenter: Removing a null observer reference");
                 it.remove();
+            }
             else
                 observer.onDatabaseUpdated(start, end);
         }

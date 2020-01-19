@@ -34,6 +34,7 @@ public class Event implements WeekViewDisplayable<Event> {
     @ColumnInfo(name="room")             private String room;
     @ColumnInfo(name="main_program_id")  private String mainStudyProgramId;
     @ColumnInfo(name="time_added")       private Date timeAdded;
+    @ColumnInfo(name="calendar_id")      private Long calendarId;
 
 
     public Event(GEEvent e) {
@@ -175,5 +176,13 @@ public class Event implements WeekViewDisplayable<Event> {
 
     public void setTimeAdded(Date timeAdded) {
         this.timeAdded = timeAdded;
+    }
+
+    public Long getCalendarId() {
+        return calendarId;
+    }
+
+    public void setCalendarId(Long calendarId) {
+        this.calendarId = calendarId;
     }
 }

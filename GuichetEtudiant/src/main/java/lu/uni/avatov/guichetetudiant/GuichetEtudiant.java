@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -59,23 +60,23 @@ public class GuichetEtudiant {
      */
     public interface NetworkBackend {
         /**
-         * Should perform an HTTP GET request to a given page of the GuichetEtudiant.
-         * @param urlSuffix The suffix which should be added to GuichetEtudiant.urlPrefix so as to obtain the necessary URL.
+         * Should perform an HTTP GET request to a given url.
+         * @param url The URL address.
          * @return The body of the response, if the request is successful.
          * @throws GEError In case of a general error
          * @throws GEAuthenticationError In case of an authentication error
          */
-        String get(String urlSuffix) throws GEError;
+        String get(String url) throws GEError;
 
         /**
-         * Should perform an HTTP POST request to a given page of the GuichetEtudiant.
-         * @param urlSuffix The suffix which should be added to GuichetEtudiant.urlPrefix so as to obtain the necessary URL.
+         * Should perform an HTTP POST request to a given url.
+         * @param url The URL address.
          * @param parameters The parameters to the request
          * @return The body of the response, if the request is successful.
          * @throws GEError In case of a general error
          * @throws GEAuthenticationError In case of an authentication error
          */
-        String post(String urlSuffix, ParametersMultimap parameters) throws GEError;
+        String post(String url, ParametersMultimap parameters) throws GEError;
 
         /**
          * Should store the credentials. This should not in general require a web access.
@@ -91,7 +92,7 @@ public class GuichetEtudiant {
      * The URL prefix of the Guichet Étudiant. All URLs are formed by adding a suffix. The prefix
      * should end with a slash.
      */
-    protected static final String urlPrefix = "https://inscription.uni.lu/Inscriptions/Student/GuichetEtudiant/";
+    private static final String urlPrefix = "https://inscription.uni.lu/Inscriptions/Student/GuichetEtudiant/";
     protected String token;
     protected NetworkBackend networkBackend;
 
@@ -126,7 +127,7 @@ public class GuichetEtudiant {
         }
 
         networkBackend.setCredentials(username, password);
-        String html = networkBackend.get("Agenda");
+        String html = networkBackend.get(urlPrefix + "Agenda");
         Document doc = Jsoup.parse(html);
         /*
         A request verification token is included as a hidden input field in every page. This token
@@ -135,14 +136,49 @@ public class GuichetEtudiant {
         the lack of either causes requests to the Guichet Étudiant to be rejected with an HTTP 500
         (Internal Server Error) response.
         */
-        try {
-            token = doc.select("[name=__RequestVerificationToken]").first().attr("value");
-        } catch (Exception e) {
-            System.err.println("Error obtaining token from Guichet Étudiant response:");
-            System.err.println(html);
-            throw new GEError("Error obtaining token from Guichet Étudiant response");
+
+        if(doc.selectFirst("[name=username]") != null) {
+            //We've been served the f5 APM login page
+            System.err.println("Attempting f5 APM login...");
+            ParametersMultimap parameters = new ParametersMultimap();
+            parameters.put("username", username);
+            parameters.put("password", password);
+            doc = Jsoup.parse(networkBackend.post("https://inscription.uni.lu/my.policy",parameters));
+            //Now we are either on the Guichet Étudiant page, or on an intermediate page from which
+            //a "dummy" value must be extracted which can then be used to proceed to the Guichet
+            Element dummy = doc.selectFirst("[name=dummy]");
+            if(dummy==null) {
+                //We're not on the intermediate page, so we must be on the Guichet Étudiant page
+                extractToken(doc);
+                return;
+            }
+            parameters = new ParametersMultimap();
+            parameters.put("dummy",dummy.attr("value"));
+            //Now we must be on the Guichet Étudiant page
+            doc = Jsoup.parse(networkBackend.post(urlPrefix + "Agenda",parameters));
+            extractToken(doc);
         }
-        System.err.println("GuichetEtudiant: successfully obtained token!");
+        else {
+            //Since we were not served the login page, we must be on the Guichet Étudiant page
+            extractToken(doc);
+        }
+
+    }
+
+    private void extractToken(Document doc) throws GEError {
+        Element tokenElement = doc.selectFirst("[name=__RequestVerificationToken]");
+        if(tokenElement!= null) {
+            String extractedToken = tokenElement.attr("value");
+            if(!extractedToken.isEmpty()) {
+                token = extractedToken;
+                System.err.println("GuichetEtudiant: successfully obtained token!");
+                return;
+            }
+        }
+        //Either the token element does not exist, it has no value, or its value is empty
+        System.err.println("Error obtaining token from Guichet Étudiant response:");
+        System.err.println(doc.html());
+        throw new GEError("Error obtaining token from Guichet Étudiant response");
     }
 
     /**
@@ -166,7 +202,7 @@ public class GuichetEtudiant {
         ParametersMultimap parameters = new ParametersMultimap();
         parameters.put("__RequestVerificationToken", token);
 
-        return networkBackend.post("getInfosEtudiant", parameters);
+        return networkBackend.post(urlPrefix + "getInfosEtudiant", parameters);
     }
 
     /**
@@ -182,7 +218,7 @@ public class GuichetEtudiant {
         params.put("__RequestVerificationToken", token); //Use the token obtained during authentication
 
         try {
-            JSONArray inArray = new JSONArray(networkBackend.post("getStudentFormation", params));
+            JSONArray inArray = new JSONArray(networkBackend.post(urlPrefix + "getStudentFormation", params));
             List<GEStudyProgram> outArray = new ArrayList<GEStudyProgram>(inArray.length());
             for (int i = 0; i < inArray.length(); ++i) {
                 JSONObject object = inArray.getJSONObject(i);
@@ -235,8 +271,10 @@ public class GuichetEtudiant {
         parameters.put("__RequestVerificationToken", token); //Use the token obtained during authentication
 
         //Make request and parse JSON
+        String json="";
         try {
-            JSONArray inArray  = new JSONArray(networkBackend.post("GetEventInPeriode", parameters));
+            json = networkBackend.post(urlPrefix + "GetEventInPeriode", parameters);
+            JSONArray inArray  = new JSONArray(json);
 
             int length = inArray.length();
             ArrayList<GEEvent> outArray = new ArrayList<GEEvent>(length);
@@ -264,6 +302,9 @@ public class GuichetEtudiant {
             }
             return outArray;
         } catch (JSONException e) {
+            System.err.println("Guichet Étudiant: JSON Exception: " + e.getMessage());
+            System.err.println("Server response:");
+            System.err.println(json);
             throw new GEError("Guichet Étudiant: JSON Exception: " + e.getMessage());
         } catch (ParseException e) {
             //Date was parsed incorrectly
