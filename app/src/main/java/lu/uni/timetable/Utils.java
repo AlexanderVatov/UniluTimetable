@@ -48,7 +48,7 @@ public class Utils {
         Calendar c = Calendar.getInstance();
         switch (month) {
             case LAST_MONTH:
-                c.roll(Calendar.MONTH, -1);
+                c.add(Calendar.MONTH, -1);
                 break;
 
             case CURRENT_MONTH:
@@ -56,7 +56,7 @@ public class Utils {
                 break;
 
             case NEXT_MONTH:
-                c.roll(Calendar.MONTH,  +1);
+                c.add(Calendar.MONTH,  +1);
                 break;
         }
         return firstDayOfMonth(c.getTime());

@@ -202,7 +202,9 @@ public class GuichetEtudiant {
         ParametersMultimap parameters = new ParametersMultimap();
         parameters.put("__RequestVerificationToken", token);
 
-        return networkBackend.post(urlPrefix + "getInfosEtudiant", parameters);
+        String fullName = networkBackend.post(urlPrefix + "getInfosEtudiant", parameters);
+        if(fullName.length()>=2) fullName = fullName.substring(1,fullName.length()-1);
+        return fullName;
     }
 
     /**
