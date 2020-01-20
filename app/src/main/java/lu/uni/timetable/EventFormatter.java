@@ -43,7 +43,7 @@ public class EventFormatter {
      * @return A non-null string
      */
     public String getTitle() {
-        if(title == null) title = e.getTitle().trim();
+        if(title == null) title = e.title.trim();
         return title;
     }
 
@@ -52,13 +52,13 @@ public class EventFormatter {
      * @return A non-null string
      */
     public String getSubject() {
-        if(subject == null) subject = e.getSubject();
+        if(subject == null) subject = e.subject;
         return subject;
     }
 
     /**
      * The building in which the event takes place (named by {@link Constants#buildingNames}.
-     * If the location provided by {@link Event#getRoom()} cannot be correctly parsed,
+     * If the location provided by {@link Event#room} cannot be correctly parsed,
      * an empty string will be returned.
      * @return A non-null string
      */
@@ -71,7 +71,7 @@ public class EventFormatter {
     /**
      * The code of the building in which the event takes place (e.g. MSA, MNO, etc.).
      * For a human-readable version, use {@link #getBuilding()}.
-     * If the location provided by {@link Event#getRoom()} cannot be correctly parsed,
+     * If the location provided by {@link Event#room} cannot be correctly parsed,
      * an empty string will be returned instead.
      * @return A non-null string
      */
@@ -83,7 +83,7 @@ public class EventFormatter {
 
     /**
      * The room in which the event takes place.
-     * If the location provided by {@link Event#getRoom()} cannot be correctly parsed,
+     * If the location provided by {@link Event#room} cannot be correctly parsed,
      * the entire location will be returned instead.
      * @return A non-null string
      */
@@ -96,7 +96,7 @@ public class EventFormatter {
     /**
      * The code of the room in which the event takes place (e.g. "3.370").
      * For a human-readable version, use {@link #getRoom()} ()}.
-     * If the location provided by {@link Event#getRoom()} cannot be correctly parsed,
+     * If the location provided by {@link Event#room} cannot be correctly parsed,
      * an empty string will be returned instead.
      * @return A non-null string
      */
@@ -135,7 +135,7 @@ public class EventFormatter {
      */
     public String getType() {
         if(type != null) return type;
-        type = e.getEventType();
+        type = e.eventType;
         if (type.equals("CM")) type = c.getString(R.string.event_cm);
         else if (type.equals("TD")) type = c.getString(R.string.event_td);
         else if (type.equals("EX")) type = c.getString(R.string.event_ex);
@@ -180,11 +180,11 @@ public class EventFormatter {
 
     /**
      * A reformatted list of lecturers (first names followed by surnames). If the names could not be
-     * parsed, a singleton list with the output of {@link Event#getLecturer()} will be returned.
+     * parsed, a singleton list with {@link Event#lecturer} will be returned.
      * @return A list containing at least one non-null string.
      */
     public List<String> getLecturers() {
-        if(lecturers == null) lecturers = getLecturers(e.getLecturer());
+        if(lecturers == null) lecturers = getLecturers(e.lecturer);
         return lecturers;
     }
 
@@ -192,7 +192,7 @@ public class EventFormatter {
      * Used internally.
      */
     protected void formatBuildingRoom() {
-        String[] locationParts = e.getRoom().replaceFirst("^[ \\t]+", "").split(" ", 2);
+        String[] locationParts = e.room.replaceFirst("^[ \\t]+", "").split(" ", 2);
         try {
             buildingCode = locationParts[0];
             roomCode = locationParts[1];
@@ -202,12 +202,12 @@ public class EventFormatter {
             if (building == null) {
                 building = "";
                 buildingCode = "";
-                room = e.getRoom();
+                room = e.room;
                 roomCode = "";
             }
         } catch (ArrayIndexOutOfBoundsException ex) {
             building = "";
-            room = e.getRoom();
+            room = e.room;
         }
     }
 
@@ -215,7 +215,7 @@ public class EventFormatter {
      * Used internally.
      */
     protected void formatTimeRangeDate() {
-        long startMilliseconds = e.getStart().getTime(), endMilliseconds = e.getEnd().getTime();
+        long startMilliseconds = e.start.getTime(), endMilliseconds = e.end.getTime();
         if ((endMilliseconds - startMilliseconds) / (24 * 60 * 60 * 1000) == 0) {
             //If the start and end are on the same day
             timeRange = DateUtils.formatDateRange(c, startMilliseconds, endMilliseconds,

@@ -22,19 +22,33 @@ public class Event implements WeekViewDisplayable<Event> {
 
     }
 
-    @PrimaryKey @NonNull                 private String id;
-    @ColumnInfo(name="start")            private Date start;
-    @ColumnInfo(name="end")              private Date end;
-    @ColumnInfo(name="title")            private String title;
-    @ColumnInfo(name="subject")          private String subject;
-    @ColumnInfo(name="subject_id")       private String subjectId;
-    @ColumnInfo(name="lecturer")         private String lecturer;
-    @ColumnInfo(name="event_type")       private String eventType;
-    @ColumnInfo(name="is_canceled")      private boolean isCanceled;
-    @ColumnInfo(name="room")             private String room;
-    @ColumnInfo(name="main_program_id")  private String mainStudyProgramId;
-    @ColumnInfo(name="time_added")       private Date timeAdded;
-    @ColumnInfo(name="calendar_id")      private Long calendarId;
+    @PrimaryKey
+    @NonNull
+    public String id;
+    @ColumnInfo(name = "start")
+    public Date start;
+    @ColumnInfo(name = "end")
+    public Date end;
+    @ColumnInfo(name = "title")
+    public String title;
+    @ColumnInfo(name = "subject")
+    public String subject;
+    @ColumnInfo(name = "subject_id")
+    public String subjectId;
+    @ColumnInfo(name = "lecturer")
+    public String lecturer;
+    @ColumnInfo(name = "event_type")
+    public String eventType;
+    @ColumnInfo(name = "is_canceled")
+    public boolean isCanceled;
+    @ColumnInfo(name = "room")
+    public String room;
+    @ColumnInfo(name = "main_program_id")
+    public String mainStudyProgramId;
+    @ColumnInfo(name = "time_added")
+    public Date timeAdded;
+    @ColumnInfo(name = "calendar_id")
+    public Long calendarId;
 
 
     public Event(GEEvent e) {
@@ -66,7 +80,7 @@ public class Event implements WeekViewDisplayable<Event> {
 //                .build();
 
         return new WeekViewEvent.Builder<Event>(this)
-                .setId(Long.parseLong('1' + id.replaceAll("[^0-9]","")))
+                .setId(Long.parseLong('1' + id.replaceAll("[^0-9]", "")))
                 .setTitle(title)
                 .setStartTime(startCalendar)
                 .setEndTime(endCalendar)
@@ -78,111 +92,8 @@ public class Event implements WeekViewDisplayable<Event> {
 
     public static ArrayList<Event> convertGEEventList(List<GEEvent> in) {
         ArrayList<Event> out = new ArrayList<Event>(in.size());
-        for(GEEvent g: in) out.add(new Event(g));
+        for (GEEvent g : in) out.add(new Event(g));
         return out;
     }
 
-    public Date getStart() {
-        return start;
-    }
-
-    public void setStart(Date start) {
-        this.start = start;
-    }
-
-    public Date getEnd() {
-        return end;
-    }
-
-    public void setEnd(Date end) {
-        this.end = end;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getSubjectId() {
-        return subjectId;
-    }
-
-    public void setSubjectId(String subjectId) {
-        this.subjectId = subjectId;
-    }
-
-    public String getLecturer() {
-        return lecturer;
-    }
-
-    public void setLecturer(String lecturer) {
-        this.lecturer = lecturer;
-    }
-
-    public String getEventType() {
-        return eventType;
-    }
-
-    public void setEventType(String eventType) {
-        this.eventType = eventType;
-    }
-
-    public boolean isCanceled() {
-        return isCanceled;
-    }
-
-    public void setCanceled(boolean canceled) {
-        isCanceled = canceled;
-    }
-
-    public String getRoom() {
-        return room;
-    }
-
-    public void setRoom(String room) {
-        this.room = room;
-    }
-
-    public String getMainStudyProgramId() {
-        return mainStudyProgramId;
-    }
-
-    public void setMainStudyProgramId(String mainStudyProgramId) {
-        this.mainStudyProgramId = mainStudyProgramId;
-    }
-
-    public Date getTimeAdded() {
-        return timeAdded;
-    }
-
-    public void setTimeAdded(Date timeAdded) {
-        this.timeAdded = timeAdded;
-    }
-
-    public Long getCalendarId() {
-        return calendarId;
-    }
-
-    public void setCalendarId(Long calendarId) {
-        this.calendarId = calendarId;
-    }
 }

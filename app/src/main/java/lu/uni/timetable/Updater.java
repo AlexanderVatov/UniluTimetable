@@ -4,19 +4,22 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import lu.uni.avatov.guichetetudiant.GEAuthenticationError;
 import lu.uni.avatov.guichetetudiant.GEError;
+import lu.uni.avatov.guichetetudiant.GEEvent;
 import lu.uni.avatov.guichetetudiant.GEStudyProgram;
 import lu.uni.avatov.guichetetudiant.GuichetEtudiant;
 
 /**
  * Performs a database update. This can be done either synchronously using {@link #update(Date, Date)}
- * (this should of corse never be done in the UI thread) or asynchronously using
+ * (this should of course never be done in the UI thread) or asynchronously using
  * {@link #asyncUpdate(UpdateListener, Date, Date)}. In the latter case, an UpdateListener is
  * required to be passed. This does not cause a memory leak as the reference is destroyed as soon as
  * the update is complete (or fails). When the update completes successfully,
@@ -35,18 +38,20 @@ public class Updater {
      */
     public static void update(Date start, Date end) throws GEError {
 
-        //Date timeStarted = Calendar.getInstance().getTime();
-        SharedPreferences encryptedPreferences = Settings.encryptedPreferences();
-        String username = encryptedPreferences.getString(Settings.USERNAME, "");
-        String password = encryptedPreferences.getString(Settings.PASSWORD, "");
+        GuichetEtudiant g = App.guichetEtudiant();
+        if(!g.isAuthenticated()) {
 
-        if(username.isEmpty() || password.isEmpty()) {
-            throw new GEAuthenticationError("Blank credentials returned by EncryptedSharedPreferences!");
+            //Date timeStarted = Calendar.getInstance().getTime();
+            SharedPreferences encryptedPreferences = Settings.encryptedPreferences();
+            String username = encryptedPreferences.getString(Settings.USERNAME, "");
+            String password = encryptedPreferences.getString(Settings.PASSWORD, "");
+
+            if(username.isEmpty() || password.isEmpty()) {
+                throw new GEAuthenticationError("Blank credentials returned by EncryptedSharedPreferences!");
+            }
+            g.authenticate(username, password);
         }
 
-        GuichetEtudiant g = App.guichetEtudiant();
-        if(!g.isAuthenticated())
-            g.authenticate(username, password);
 
         SharedPreferences preferences = Settings.preferences();
         Set<String> studyProgramIds = preferences.getStringSet(Settings.STUDY_PROGRAMS, null);
@@ -62,20 +67,59 @@ public class Updater {
             preferences.edit().putStringSet(Settings.STUDY_PROGRAMS, studyProgramIds).apply();
         }
 
-        List<Event> events = Event.convertGEEventList(
-                g.getEvents(
-                    start,
-                    end,
-                    new ArrayList<>(studyProgramIds)
-                )
-        );
-        EventDAO dao = Database.instance().getEventDAO();
-        for (Event e: events) {
-            dao.upsert(e); //If an event with the same id already exists, it will be updated
+        List<GEEvent> geEvents = g.getEvents(start, end, new ArrayList<>(studyProgramIds));
+        List<Event> dbEvents = Presenter.synchronousRequestEvents(start, end);
+        HashMap<String,Event> dbEventsMap = new HashMap<>();
+        for(Event e: dbEvents)
+            dbEventsMap.put(e.id, e);
+
+        Collection<Event> createdEvents = new ArrayList<>(), modifiedEvents = new ArrayList<>(), cancelledEvents;
+        for(GEEvent geEvent: geEvents) {
+
+            //Fetch event from the hashmap, and remove it from there. Whatever remains at the end of
+            //the loop are events which are no longer there on the Guichet Étudiant.
+            Event dbEvent = dbEventsMap.remove(geEvent.id);
+            if(dbEvent == null) //Event not present in the database; it is newly created
+                createdEvents.add(new Event(geEvent));
+            else {
+                Object modified = null; //Used to tell whether any modification was made
+
+                if(!dbEvent.start.equals(geEvent.start))
+                    modified = (dbEvent.start = geEvent.start);
+                if(!dbEvent.end.equals(geEvent.end))
+                    modified = (dbEvent.end = geEvent.end);
+                if(!dbEvent.title.equals(geEvent.title))
+                    modified = (dbEvent.title = geEvent.title);
+                if(!dbEvent.subject.equals(geEvent.subject))
+                    modified = (dbEvent.subject = geEvent.subject);
+                if(!dbEvent.subjectId.equals(geEvent.subjectId))
+                    modified = (dbEvent.subjectId = geEvent.subjectId);
+                if(!dbEvent.lecturer.equals(geEvent.lecturer))
+                    modified = (dbEvent.lecturer = geEvent.lecturer);
+                if(!dbEvent.eventType.equals(geEvent.eventType))
+                    modified = (dbEvent.eventType = geEvent.eventType);
+                if(!dbEvent.room.equals(geEvent.room))
+                    modified = (dbEvent.room = geEvent.room);
+                if(!dbEvent.mainStudyProgramId.equals(geEvent.mainStudyProgramId))
+                    modified = (dbEvent.mainStudyProgramId = geEvent.mainStudyProgramId);
+
+                //If any modification was made, add event to the list of modified events
+                if(modified != null) modifiedEvents.add(dbEvent);
+            }
         }
-        System.err.println("Updater: Inserted " + events.size() + " events!");
+        cancelledEvents = dbEventsMap.values();
+        for(Event e: cancelledEvents)
+            e.isCanceled = true;
 
+        CalendarSync.update(start,end,createdEvents, modifiedEvents, cancelledEvents);
 
+        System.err.println("Updater: " + createdEvents.size() + " new, "
+                        + modifiedEvents.size() + " modified, "
+                        + cancelledEvents.size()+ " cancelled.");
+
+        EventDAO dao = Database.instance().getEventDAO();
+        modifiedEvents.addAll(cancelledEvents);
+        dao.insertAndUpdate(createdEvents,modifiedEvents);
     }
 
     /**

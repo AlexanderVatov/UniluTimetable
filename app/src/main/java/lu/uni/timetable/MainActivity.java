@@ -177,12 +177,6 @@ public class MainActivity extends AppCompatActivity implements TimetableFragment
                     }
                 }
                 return true;
-            case R.id.action_sync_calendar:
-//                CalendarSync.test(this);
-                CalendarSync.testAdd(this);
-//                CalendarSync.testQuery(this);
-
-                return true;
 
             case R.id.action_logout:
                 System.err.println("Logging out!");

@@ -138,8 +138,8 @@ public class GuichetEtudiant {
         */
 
         if(doc.selectFirst("[name=username]") != null) {
-            //We've been served the f5 APM login page
-            System.err.println("Attempting f5 APM login...");
+            //We've been served the f5 BIG-IP APM login page
+            System.err.println("Attempting f5 BIG-IP APM login...");
             ParametersMultimap parameters = new ParametersMultimap();
             parameters.put("username", username);
             parameters.put("password", password);

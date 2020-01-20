@@ -70,10 +70,9 @@ public class OkHttpBackend implements GuichetEtudiant.NetworkBackend  {
 
 	protected static URL generateURL(String url) throws GEError {
 		try {
-			//return new URL(GuichetEtudiant.urlPrefix + urlSuffix);
 			return new URL(url);
 		} catch(MalformedURLException e) {
-			throw new GEError("Guichet Étudiant Error: Malformed URL");
+			throw new GEError("Guichet Étudiant Error: Malformed URL: " + url);
 		}
 	}
 

@@ -32,16 +32,16 @@ public class EventIntent extends Intent {
      */
     public static Intent newIntent (Event event, Context context, Class<?> cls) {
         Intent i = new Intent(context, cls);
-        i.putExtra(start, event.getStart().getTime());
-        i.putExtra(end, event.getEnd().getTime());
-        i.putExtra(title, event.getTitle());
-        i.putExtra(subject, event.getSubject());
-        i.putExtra(subject_id, event.getSubjectId());
-        i.putExtra(lecturer, event.getLecturer());
-        i.putExtra(event_type, event.getEventType());
-        i.putExtra(is_canceled, event.isCanceled());
-        i.putExtra(room, event.getRoom());
-        i.putExtra(main_program_id, event.getMainStudyProgramId());
+        i.putExtra(start, event.start.getTime());
+        i.putExtra(end, event.end.getTime());
+        i.putExtra(title, event.title);
+        i.putExtra(subject, event.subject);
+        i.putExtra(subject_id, event.subjectId);
+        i.putExtra(lecturer, event.lecturer);
+        i.putExtra(event_type, event.eventType);
+        i.putExtra(is_canceled, event.isCanceled);
+        i.putExtra(room, event.room);
+        i.putExtra(main_program_id, event.mainStudyProgramId);
         //i.putExtra(time_added, event.getTimeAdded().getTime());
 
         return i;
@@ -55,16 +55,16 @@ public class EventIntent extends Intent {
     public static Event getEvent(Intent intent) {
         Event e = new Event();
 
-        e.setStart(new Date(intent.getLongExtra(start, 0)));
-        e.setEnd(new Date(intent.getLongExtra(end, 0)));
-        e.setTitle(intent.getStringExtra(title));
-        e.setSubject(intent.getStringExtra(subject));
-        e.setSubjectId(intent.getStringExtra(subject_id));
-        e.setLecturer(intent.getStringExtra(lecturer));
-        e.setEventType(intent.getStringExtra(event_type));
-        e.setCanceled(intent.getBooleanExtra(is_canceled, false));
-        e.setRoom(intent.getStringExtra(room));
-        e.setMainStudyProgramId(intent.getStringExtra(main_program_id));
+        e.start = new Date(intent.getLongExtra(start, 0));
+        e.end = new Date(intent.getLongExtra(end, 0));
+        e.title = intent.getStringExtra(title);
+        e.subject = intent.getStringExtra(subject);
+        e.subjectId = intent.getStringExtra(subject_id);
+        e.lecturer = intent.getStringExtra(lecturer);
+        e.eventType = intent.getStringExtra(event_type);
+        e.isCanceled = intent.getBooleanExtra(is_canceled, false);
+        e.room = intent.getStringExtra(room);
+        e.mainStudyProgramId = intent.getStringExtra(main_program_id);
         //e.setTimeAdded(new Date(getLongExtra(time_added, 0)));
 
         return e;

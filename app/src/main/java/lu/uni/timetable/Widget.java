@@ -42,13 +42,13 @@ public class Widget extends AppWidgetProvider {
             Event e = events.get(0);
             StringBuilder b = new StringBuilder();
             b.append(DateUtils.formatDateTime(App.getInstance(),
-                    e.getStart().getTime(),
+                    e.start.getTime(),
                     DateUtils.FORMAT_SHOW_TIME));
             b.append(" · ");
-            b.append(e.getRoom());
+            b.append(e.room);
 
             views.setTextViewText(R.id.roomCell, b.toString());
-            views.setTextViewText(R.id.subjectCell, e.getTitle());
+            views.setTextViewText(R.id.subjectCell, e.title);
             views.setViewVisibility(R.id.subjectCell, View.VISIBLE);
         }
 

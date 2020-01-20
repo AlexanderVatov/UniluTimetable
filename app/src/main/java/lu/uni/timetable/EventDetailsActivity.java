@@ -45,7 +45,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         if (title.equals(subject))
             findViewById(R.id.subjectView).setVisibility(View.GONE);
         else
-            ((TextView) findViewById(R.id.subjectView)).setText(e.getSubject());
+            ((TextView) findViewById(R.id.subjectView)).setText(e.subject);
 
         if (building.isEmpty())
             findViewById(R.id.buildingView).setVisibility(View.GONE);

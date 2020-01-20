@@ -5,40 +5,55 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 @Dao
-interface EventDAO {
+public abstract class EventDAO {
     @Insert
-    void insert(Event... events);
+    public abstract void insert(Event... events);
+
+    @Insert
+    public abstract void insertAll(Collection<Event> events);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void upsert(Event... events);
+    public abstract void upsert(Event... events);
 
     @Update
-    void update(Event... events);
+    public abstract void update(Event... events);
+
+    @Update
+    public abstract void updateAll(Collection<Event> events);
+
+    @Transaction
+    public void insertAndUpdate(Collection<Event> toInsert, Collection<Event> toUpdate) {
+        insertAll(toInsert);
+        updateAll(toUpdate);
+    }
 
     @Delete
-    void delete(Event... events);
+    public abstract void delete(Event... events);
 
     @Query("SELECT * FROM events WHERE id = :id")
-    Event getEventById(String id);
+    public abstract Event getEventById(String id);
 
     @Query("SELECT * FROM events WHERE (start>= :start AND `end` <= :end )")
-    List<Event> getEventsBetweenDates(Date start, Date end);
+    public abstract List<Event> getEventsBetweenDates(Date start, Date end);
 
     @Query("SELECT * FROM events WHERE (start <= :moment AND `end` >= :moment) ORDER BY `end`")
-    List<Event> getOngoingEventsAt(Date moment);
+    public abstract List<Event> getOngoingEventsAt(Date moment);
 
     @Query("SELECT * FROM events WHERE ((`end` >= :start AND `end` <= :end) OR (start >= :start AND start <= :start)) ORDER BY `end`")
-    List<Event> getOngoingEventsBetween(Date start, Date end);
+    public abstract List<Event> getOngoingEventsBetween(Date start, Date end);
 
     @Query("SELECT * FROM events")
-    List<Event> getAllEvents();
+    public abstract List<Event> getAllEvents();
     
     @Query("DELETE FROM events")
-    void deleteAllEvents();
+    public abstract void deleteAllEvents();
+
 }

@@ -14,8 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import java.lang.ref.WeakReference;
-import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class CalendarSync implements Presenter.Observer {
     private static CalendarSync _instance;
     public CalendarSync() {
         _instance=this;
-        Presenter.getInstance().register(new WeakReference<Presenter.Observer>(this));
+//        Presenter.getInstance().register(new WeakReference<Presenter.Observer>(this));
     }
 
     // Projection array. Creating indices for this array instead of doing
@@ -78,33 +77,6 @@ public class CalendarSync implements Presenter.Observer {
 
     }
 
-    public static void testAdd(AppCompatActivity activity) {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_CALENDAR)
-                != PackageManager.PERMISSION_GRANTED) {
-            System.err.println("Requesting calendar writing permission...");
-            ActivityCompat.requestPermissions(activity,
-                    new String[]{Manifest.permission.WRITE_CALENDAR}, 1);
-        }
-
-        Calendar beginTime = Calendar.getInstance();
-        beginTime.set(2020, 0, 10, 10, 30);
-
-        Calendar endTime = Calendar.getInstance();
-        endTime.set(2020, 0, 10, 11, 30);
-
-        ContentValues values = new ContentValues();
-        values.put(CalendarContract.Events.DTSTART, beginTime.getTimeInMillis());
-        values.put(CalendarContract.Events.DTEND, endTime.getTimeInMillis());
-        values.put(CalendarContract.Events.TITLE, "Test event 3");
-        values.put(CalendarContract.Events.DESCRIPTION, "Test description");
-        values.put(CalendarContract.Events.CALENDAR_ID, 11);
-        values.put(CalendarContract.Events.EVENT_TIMEZONE, "Europe/Luxembourg");
-        values.put(CalendarContract.Events.EVENT_LOCATION, "Luxembourg");
-
-        ContentResolver cr = App.getInstance().getContentResolver();
-        System.err.println(cr.insert(CalendarContract.Events.CONTENT_URI, values));
-    }
-
     public static void updateEvent(Event event) {
         if (ContextCompat.checkSelfPermission(App.getInstance(), Manifest.permission.WRITE_CALENDAR)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -113,70 +85,56 @@ public class CalendarSync implements Presenter.Observer {
         }
 
         ContentValues values = new ContentValues();
-        values.put(CalendarContract.Events.DTSTART, event.getStart().getTime());
-        values.put(CalendarContract.Events.DTEND, event.getEnd().getTime());
-        values.put(CalendarContract.Events.TITLE, event.getTitle());
-        values.put(CalendarContract.Events.DESCRIPTION, event.getLecturer());
+        values.put(CalendarContract.Events.DTSTART, event.start.getTime());
+        values.put(CalendarContract.Events.DTEND, event.end.getTime());
+        values.put(CalendarContract.Events.TITLE, event.title);
+        values.put(CalendarContract.Events.DESCRIPTION, event.lecturer);
         values.put(CalendarContract.Events.CALENDAR_ID, 11);
         values.put(CalendarContract.Events.EVENT_TIMEZONE, "Europe/Luxembourg");
-        values.put(CalendarContract.Events.EVENT_LOCATION, event.getRoom());
+        values.put(CalendarContract.Events.EVENT_LOCATION, event.room);
 
         ContentResolver cr = App.getInstance().getContentResolver();
-        Long eventCalendarId = event.getCalendarId();
+        Long eventCalendarId = event.calendarId;
         if(eventCalendarId == null) {
             //If the event has not yet been added to the calendar
             System.err.println("Adding event to calendar...");
             Uri insertUri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
-            event.setCalendarId(Long.parseLong(insertUri.getLastPathSegment()));
-            Database.instance().getEventDAO().update(event);
+            event.calendarId = Long.parseLong(insertUri.getLastPathSegment());
         }
         else {
-            System.err.println("Updating event...");
-            Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, event.getCalendarId());
+            System.err.println("Updating event in calendar...");
+            Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, event.calendarId);
             cr.update(updateUri, values, null, null);
         }
     }
 
-    public static void testQuery(AppCompatActivity activity) {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_CALENDAR)
-                != PackageManager.PERMISSION_GRANTED) {
-            System.err.println("Requesting calendar writing permission...");
-            ActivityCompat.requestPermissions(activity,
-                    new String[]{Manifest.permission.WRITE_CALENDAR}, 1);
-        }
-
-        Cursor cur;
-        ContentResolver cr = App.getInstance().getContentResolver();
-
-        String[] mProjection =
-                {
-                        "_id",
-                        CalendarContract.Events.TITLE,
-                        CalendarContract.Events.EVENT_LOCATION,
-                        CalendarContract.Events.DTSTART,
-                        CalendarContract.Events.DTEND,
-                };
-
-        Uri uri = CalendarContract.Events.CONTENT_URI;
-        String selection = CalendarContract.Events.CALENDAR_ID + " = ? ";
-        String[] selectionArgs = new String[]{"11"};
-        //String[] selectionArgs = new String[]{"content://com.android.calendar/events/2615"};
-
-        cur = cr.query(uri, mProjection, selection, selectionArgs, null);
-
-        for (int i = 1; (i <= 15) && cur.moveToNext(); ++i) {
-            //String title = cur.getString(cur.getColumnIndex(CalendarContract.Events.TITLE));
-            for (int j = 0; j < mProjection.length; ++j) {
-                System.err.println(cur.getString(j));
-            }
+    public static void deleteEvent(Event event) {
+        if(event.calendarId != null) {
+            System.err.println("Deleting event from calendar...");
+            ContentResolver cr = App.getInstance().getContentResolver();
+            Uri deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, event.calendarId);
+            cr.delete(deleteUri, null, null);
+            event.calendarId=null;
         }
     }
+
+
 
     @Override
     public void onDatabaseUpdated(Date startOfUpdatedPeriod, Date endOfUpdatedPeriod) {
         List<Event>  events = Presenter.synchronousRequestEvents(startOfUpdatedPeriod, endOfUpdatedPeriod);
         for(Event e: events) updateEvent(e);
+    }
 
+    public static void update(Date startOfUpdatedPeriod,
+                       Date endOfUpdatedPeriod,
+                       Collection<Event> createdEvents,
+                       Collection<Event> modifiedEvents,
+                       Collection<Event> removedEvents) {
+
+        for(Event e: createdEvents)  updateEvent(e);
+        for(Event e: modifiedEvents) updateEvent(e);
+        for(Event e: removedEvents)  deleteEvent(e);
     }
 
     @Override
