@@ -16,4 +16,15 @@
     <string name="show_map">Покажи на карте</string>
     <string name="event_tp">Практические занятия</string>
     <string name="event_room">Зал</string>
+    <string name="activity_event_details">Подробности</string>
+    <string name="action_sign_in">Войти</string>
+    <string name="activity_login">Вход</string>
+    <string name="invalid_username">Пожалуйста введите свой студенческий номер</string>
+    <string name="invalid_password">Пожалуйста введите пароль</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="prompt_username">Студенческий номер</string>
+    <string name="sign_out">Выход</string>
+    <string name="sync_calendar">Обновить</string>
+    <string name="welcome">"Добро пожаловать, "</string>
+    <string name="login_failed">Вход провалился!</string>
 </resources>

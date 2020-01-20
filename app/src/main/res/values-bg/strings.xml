@@ -16,4 +16,15 @@
     <string name="show_map">Покажи на картата</string>
     <string name="event_room">Аудитория</string>
     <string name="event_tp">Практическо обучение</string>
+    <string name="activity_event_details">Подробности</string>
+    <string name="action_sign_in">Вход</string>
+    <string name="activity_login">Вход</string>
+    <string name="invalid_username">Моля въведете студентския си номер</string>
+    <string name="invalid_password">Моля въведете паролата на университетската си парола</string>
+    <string name="prompt_password">Парола</string>
+    <string name="prompt_username">Студентски номер</string>
+    <string name="sign_out">Изход</string>
+    <string name="sync_calendar">Обнови разписанието</string>
+    <string name="welcome">"Добре дошли, "</string>
+    <string name="login_failed">Входът се провали</string>
 </resources>

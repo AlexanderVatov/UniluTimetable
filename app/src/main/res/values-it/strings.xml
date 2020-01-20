@@ -16,4 +16,15 @@
     <string name="show_map">Mostrare sulla mappa</string>
     <string name="event_tp">Travaux pratiques</string>
     <string name="event_room">Aula</string>
+    <string name="activity_event_details">Dettagli</string>
+    <string name="action_sign_in">Accedi</string>
+    <string name="activity_login">Accesso</string>
+    <string name="invalid_username">Immettere numero di matricola</string>
+    <string name="invalid_password">Immettere la password del vostro conto universitario</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_username">Matricola</string>
+    <string name="sign_out">Uscire</string>
+    <string name="sync_calendar">Aggiornare</string>
+    <string name="welcome">"Benvenuto, "</string>
+    <string name="login_failed">Accesso fallito</string>
 </resources>

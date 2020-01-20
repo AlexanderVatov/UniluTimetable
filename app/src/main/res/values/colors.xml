@@ -3,6 +3,6 @@
     <color name="colorPrimary">#00AADC</color>
     <color name="colorPrimaryDark">#0199C5</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="colorDefaultEvent">#00AADC</color>
+    <color name="colorDefaultEvent">#7800AADC</color>
     <color name="colorNowLine">#FF140B</color>
 </resources>

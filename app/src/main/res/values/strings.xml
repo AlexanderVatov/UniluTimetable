@@ -15,17 +15,15 @@
     <string name="show_map">Show on map</string>
     <string name="event_room">Room</string>
     <string name="event_tp">Practical work</string>
-    <string name="title_activity_login">Sign in</string>
-    <string name="prompt_email">Email</string>
+    <string name="activity_login">Sign in</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
-    <string name="welcome">"Welcome "</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="welcome">"Welcome, "</string>
+    <string name="invalid_username">Please enter your student ID</string>
+    <string name="invalid_password">Please enter your university account password</string>
     <string name="login_failed">"Login failed"</string>
-    <string name="prompt_username">Username</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
-    <string name="sync_calendar">Sync calendar</string>
+    <string name="sync_calendar">Sync timetable</string>
     <string name="sign_out">Sign out</string>
+    <string name="activity_event_details">Event Details</string>
+    <string name="prompt_username">Student ID</string>
 </resources>

@@ -32,12 +32,13 @@
 
         <activity
             android:name=".ui.login.LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/activity_login" />
         <activity
             android:name=".RoomMapActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".EventDetailsActivity"
+            android:label="@string/activity_event_details"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"

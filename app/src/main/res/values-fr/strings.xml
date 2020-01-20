@@ -16,4 +16,15 @@
     <string name="show_map">Montrer sur la carte</string>
     <string name="event_room">Salle</string>
     <string name="event_tp">Travaux pratiques</string>
+    <string name="activity_event_details">Détails</string>
+    <string name="action_sign_in">Se connecter</string>
+    <string name="activity_login">Connexion</string>
+    <string name="invalid_username">Entrez votre matricule s.v.p.</string>
+    <string name="invalid_password">Entrez le mot de passe de votre compte universitaire s.v.p.</string>
+    <string name="prompt_password">Mot de passe</string>
+    <string name="prompt_username">Matricule</string>
+    <string name="sign_out">Se déconnecter</string>
+    <string name="sync_calendar">Mettre à jour</string>
+    <string name="welcome">"Bienvenu "</string>
+    <string name="login_failed">Connexion échouée</string>
 </resources>
