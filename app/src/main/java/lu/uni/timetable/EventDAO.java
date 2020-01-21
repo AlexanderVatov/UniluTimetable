@@ -50,10 +50,16 @@ public abstract class EventDAO {
     @Query("SELECT * FROM events WHERE ((`end` >= :start AND `end` <= :end) OR (start >= :start AND start <= :start)) ORDER BY `end`")
     public abstract List<Event> getOngoingEventsBetween(Date start, Date end);
 
+    @Query("SELECT * FROM events WHERE start >= :date AND calendar_id IS NOT NULL")
+    public abstract List<Event> getCalendarEventsAfter(Date date);
+
     @Query("SELECT * FROM events")
     public abstract List<Event> getAllEvents();
     
     @Query("DELETE FROM events")
     public abstract void deleteAllEvents();
+
+    @Query("SELECT COUNT(*) FROM events")
+    public abstract int numberOfEvents();
 
 }

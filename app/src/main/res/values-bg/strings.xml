@@ -27,4 +27,6 @@
     <string name="sync_calendar">Обнови разписанието</string>
     <string name="welcome">"Добре дошли, "</string>
     <string name="login_failed">Входът се провали</string>
+    <string name="widget_press_for_login">Натиснете за да влезете</string>
+    <string name="widget_done_for_today">Няма повече уроци днес</string>
 </resources>

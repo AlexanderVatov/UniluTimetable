@@ -1,6 +1,7 @@
 package lu.uni.timetable;
 
 import android.Manifest;
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -14,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -77,12 +80,21 @@ public class CalendarSync implements Presenter.Observer {
 
     }
 
+    public static boolean havePermission() {
+        return ContextCompat.checkSelfPermission(App.getInstance(), Manifest.permission.WRITE_CALENDAR)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
     public static void updateEvent(Event event) {
-        if (ContextCompat.checkSelfPermission(App.getInstance(), Manifest.permission.WRITE_CALENDAR)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (!havePermission()) {
             System.err.println("No permission to write to calendar!");
             return;
         }
+
+        if(event.calendarId == null && event.end.before(Calendar.getInstance().getTime()))
+            return; //Past events should not be added to calendar, but if they were already there
+        // and they were modified in the Guichet Étudiant and in the database, they should probably
+        // be updated in the calendar as well for consistency
 
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART, event.start.getTime());
@@ -94,8 +106,7 @@ public class CalendarSync implements Presenter.Observer {
         values.put(CalendarContract.Events.EVENT_LOCATION, event.room);
 
         ContentResolver cr = App.getInstance().getContentResolver();
-        Long eventCalendarId = event.calendarId;
-        if(eventCalendarId == null) {
+        if(event.calendarId == null) {
             //If the event has not yet been added to the calendar
             System.err.println("Adding event to calendar...");
             Uri insertUri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
@@ -118,6 +129,27 @@ public class CalendarSync implements Presenter.Observer {
         }
     }
 
+    public static void deleteEvents(Collection<Event> events) {
+        if (!havePermission()) {
+            System.err.println("No permission to write to calendar!");
+            return;
+        }
+        ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
+
+        for (Event e: events) {
+            operationList.add(
+                    ContentProviderOperation.newDelete(CalendarContract.Events.CONTENT_URI)
+                    .withSelection(CalendarContract.Events._ID + " =? ", new String[]{e.calendarId.toString()})
+                    .build());
+        }
+
+        try {
+            App.getInstance().getContentResolver().applyBatch(CalendarContract.AUTHORITY, operationList);
+        }
+        catch (Exception ex) {
+            System.err.println("Error deleting events from calendar!");
+        }
+    }
 
 
     @Override
@@ -134,7 +166,7 @@ public class CalendarSync implements Presenter.Observer {
 
         for(Event e: createdEvents)  updateEvent(e);
         for(Event e: modifiedEvents) updateEvent(e);
-        for(Event e: removedEvents)  deleteEvent(e);
+        deleteEvents(removedEvents);
     }
 
     @Override

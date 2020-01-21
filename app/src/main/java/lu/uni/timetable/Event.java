@@ -79,7 +79,7 @@ public class Event implements WeekViewDisplayable<Event> {
 //                .setTextStrikeThrough(isCanceled)
 //                .build();
 
-        return new WeekViewEvent.Builder<Event>(this)
+        return new WeekViewEvent.Builder<>(this)
                 .setId(Long.parseLong('1' + id.replaceAll("[^0-9]", "")))
                 .setTitle(title)
                 .setStartTime(startCalendar)

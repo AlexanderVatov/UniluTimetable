@@ -41,7 +41,6 @@ public class TimetableFragment
     private Presenter presenter;
     private ITimetableFragmentObserver observer;
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -57,6 +56,13 @@ public class TimetableFragment
 
         activity = getActivity();
         return parentView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        System.err.println("TimetableFragment.onDestroyView: unregistering from Presenter");
+        presenter.unregister(this);
+        super.onDestroyView();
     }
 
     //Called by activity containing this fragment

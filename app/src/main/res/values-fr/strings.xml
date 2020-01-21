@@ -27,4 +27,6 @@
     <string name="sync_calendar">Mettre à jour</string>
     <string name="welcome">"Bienvenu "</string>
     <string name="login_failed">Connexion échouée</string>
+    <string name="widget_press_for_login">Appuyez pour se connecter</string>
+    <string name="widget_done_for_today">Plus de cours aujourd\'hui</string>
 </resources>

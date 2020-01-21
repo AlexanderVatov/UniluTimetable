@@ -1,8 +1,5 @@
 package lu.uni.timetable;
 
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
-import android.content.Intent;
 import android.os.AsyncTask;
 
 import java.lang.ref.WeakReference;
@@ -44,11 +41,20 @@ public class Presenter {
         Observer newRef = newObserver.get();
 
         //Check that the observer is not already in the list.
-        for(WeakReference<Observer> ref: observers)
-            if(ref.get() == newRef)
+        for(WeakReference<Observer> ref: observers) {
+            if (ref.get() == newRef) {
+                System.err.println("Presenter.register: Observer already registered!");
                 return;
+            }
+        }
 
         this.observers.add(newObserver);
+    }
+
+    public void unregister(Observer observer) {
+        for (Iterator<WeakReference<Observer>> it = observers.iterator(); it.hasNext();)
+            if(it.next().get() == observer)
+                it.remove();
     }
 
     /**
@@ -57,6 +63,7 @@ public class Presenter {
      * @param end End of the date range affected by the update.
      */
     void updatePerformed(Date start, Date end) {
+        System.gc();
         System.err.println("Presenter: An update was performed! Informing " + observers.size() + " observer(s)...");
 
         for (Iterator<WeakReference<Observer>> it = observers.iterator(); it.hasNext();) {
@@ -69,13 +76,7 @@ public class Presenter {
                 observer.onDatabaseUpdated(start, end);
         }
 
-        //Update widget(s)
-        Intent intent = new Intent(App.getInstance(), Widget.class);
-        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        int[] ids = AppWidgetManager.getInstance(App.getInstance())
-                .getAppWidgetIds(new ComponentName(App.getInstance(),Widget.class));
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-        App.getInstance().sendBroadcast(intent);
+        Widget.update();
     }
 
     /**

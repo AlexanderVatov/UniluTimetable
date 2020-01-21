@@ -27,4 +27,6 @@
     <string name="sync_calendar">Aggiornare</string>
     <string name="welcome">"Benvenuto, "</string>
     <string name="login_failed">Accesso fallito</string>
+    <string name="widget_press_for_login">Premere per accedere</string>
+    <string name="widget_done_for_today">Fine delle lezioni per oggi</string>
 </resources>

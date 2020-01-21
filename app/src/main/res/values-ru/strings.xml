@@ -27,4 +27,6 @@
     <string name="sync_calendar">Обновить</string>
     <string name="welcome">"Добро пожаловать, "</string>
     <string name="login_failed">Вход провалился!</string>
+    <string name="widget_press_for_login">"Нажмите здесь для входа "</string>
+    <string name="widget_done_for_today">Конец пар на сегодня</string>
 </resources>

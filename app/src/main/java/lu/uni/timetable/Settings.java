@@ -2,9 +2,13 @@ package lu.uni.timetable;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKeys;
+
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * Stores and retrieves user settings
@@ -52,11 +56,33 @@ public class Settings {
     }
 
     public static void deleteUserData() {
-        Database.instance().getEventDAO().deleteAllEvents();
+        new AsyncTask<Void, Void, Void>() {
 
-        preferences().edit().putBoolean(USER_LOGGED_IN, false).apply();
+            @Override
+            protected Void doInBackground(Void... emptiness) {
+                EventDAO dao = Database.instance().getEventDAO();
+                List<Event> futureCalendarEvents = dao.getCalendarEventsAfter(Calendar.getInstance().getTime());
+                CalendarSync.deleteEvents(futureCalendarEvents);
 
-        encryptedPreferences().edit().clear().apply();
+                System.err.println("Events in database: " + dao.numberOfEvents());
+                dao.deleteAllEvents();
+                System.err.println("Events in database: " + dao.numberOfEvents());
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void emptiness) {
+                SharedPreferences.Editor e = preferences().edit();
+                e.putBoolean(USER_LOGGED_IN, false);
+                e.remove(STUDY_PROGRAMS);
+                e.apply();
+
+                encryptedPreferences().edit().clear().apply();
+                Widget.update();
+            }
+        }.execute();
+
     }
 
 }

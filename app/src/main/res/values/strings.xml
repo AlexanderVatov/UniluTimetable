@@ -26,4 +26,6 @@
     <string name="sign_out">Sign out</string>
     <string name="activity_event_details">Event Details</string>
     <string name="prompt_username">Student ID</string>
+    <string name="widget_press_for_login">Press to sign in</string>
+    <string name="widget_done_for_today">No more classes today</string>
 </resources>
