@@ -26,19 +26,12 @@ import lu.uni.timetable.ui.login.LoginActivity;
 public class MainActivity extends AppCompatActivity implements TimetableFragment.ITimetableFragmentObserver, Updater.UpdateListener {
     static final int LOGIN_REQUEST = 1;
 
-    enum ViewOption {
-        View1Day,
-        View3Days,
-        View5Days,
-        View7Days
-    }
-
     private TimetableFragment timetableFragment;
     private FloatingActionButton updateButton;
     private Animation updateButtonAnimation;
     private boolean updateRunning = false;
-    private ViewOption portraitViewOption = ViewOption.View3Days;
-    private ViewOption landscapeViewOption = ViewOption.View5Days;
+    private int portraitVisibleDays = 3;
+    private int landscapeVisibleDays = 5;
     private MenuItem viewOptionMenu;
     private boolean landscapeOrientation;
 
@@ -54,12 +47,12 @@ public class MainActivity extends AppCompatActivity implements TimetableFragment
         updateButtonAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_update_button);
         landscapeOrientation = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
         if(landscapeOrientation) {
-            landscapeViewOption = ViewOption.View5Days;
-            timetableFragment.getWeekView().setNumberOfVisibleDays(5);
+            landscapeVisibleDays = Settings.preferences().getInt(Settings.VISIBLE_DAYS_LANDSCAPE, 5);
+            timetableFragment.getWeekView().setNumberOfVisibleDays(landscapeVisibleDays);
         }
         else {
-            portraitViewOption = ViewOption.View3Days;
-            timetableFragment.getWeekView().setNumberOfVisibleDays(3);
+            portraitVisibleDays = Settings.preferences().getInt(Settings.VISIBLE_DAYS_PORTRAIT, 3);
+            timetableFragment.getWeekView().setNumberOfVisibleDays(portraitVisibleDays);
         }
 
         if(!prefs.getBoolean(Settings.USER_LOGGED_IN, false)) {
@@ -142,40 +135,52 @@ public class MainActivity extends AppCompatActivity implements TimetableFragment
                 return true;
             case R.id.action_view_option:
                 if(landscapeOrientation) {
-                    switch(landscapeViewOption) {
-                        case View3Days:
-                            landscapeViewOption = ViewOption.View5Days;
+                    switch(landscapeVisibleDays) {
+                        case 3:
+                            landscapeVisibleDays = 5;
                             timetableFragment.getWeekView().setNumberOfVisibleDays(5);
                             viewOptionMenu.setIcon(R.drawable.view_7days);
                             viewOptionMenu.setTitle(R.string.view_7days);
                             break;
-                        case View5Days:
-                            landscapeViewOption = ViewOption.View7Days;
+                        case 5:
+                            landscapeVisibleDays = 7;
                             timetableFragment.getWeekView().setNumberOfVisibleDays(7);
                             viewOptionMenu.setIcon(R.drawable.view_3days);
                             viewOptionMenu.setTitle(R.string.view_3days);
                             break;
-                        case View7Days:
-                            landscapeViewOption = ViewOption.View3Days;
+                        case 7:
+                            landscapeVisibleDays = 3;
                             timetableFragment.getWeekView().setNumberOfVisibleDays(3);
                             viewOptionMenu.setIcon(R.drawable.view_5days);
                             viewOptionMenu.setTitle(R.string.view_5days);
                     }
-
+                    //Save new option
+                    Settings
+                            .preferences()
+                            .edit()
+                            .putInt(Settings.VISIBLE_DAYS_LANDSCAPE, landscapeVisibleDays)
+                            .apply();
                 }
                 else {
-                    if (portraitViewOption == ViewOption.View1Day) {
-                        portraitViewOption = ViewOption.View3Days;
+                    if (portraitVisibleDays == 1) {
+                        portraitVisibleDays = 3;
                         viewOptionMenu.setIcon(R.drawable.view_day);
                         viewOptionMenu.setTitle(getString(R.string.view_day));
                         timetableFragment.getWeekView().setNumberOfVisibleDays(3);
                     } else { //if view.Option == ViewOption.View3Days
-                        portraitViewOption = ViewOption.View1Day;
+                        portraitVisibleDays = 1;
                         viewOptionMenu.setIcon(R.drawable.view_3days);
                         viewOptionMenu.setTitle(getString(R.string.view_3days));
                         timetableFragment.getWeekView().setNumberOfVisibleDays(1);
                     }
+                    //Save new option
+                    Settings
+                            .preferences()
+                            .edit()
+                            .putInt(Settings.VISIBLE_DAYS_PORTRAIT, portraitVisibleDays)
+                            .apply();
                 }
+
                 return true;
 
             case R.id.action_logout:

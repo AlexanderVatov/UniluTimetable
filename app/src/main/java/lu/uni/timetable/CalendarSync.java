@@ -91,7 +91,8 @@ public class CalendarSync implements Presenter.Observer {
             return;
         }
 
-        if(event.calendarId == null && event.end.before(Calendar.getInstance().getTime()))
+        if(event.calendarId == null &&
+                (event.end.before(Calendar.getInstance().getTime()) || event.isCanceled))
             return; //Past events should not be added to calendar, but if they were already there
         // and they were modified in the Guichet Étudiant and in the database, they should probably
         // be updated in the calendar as well for consistency

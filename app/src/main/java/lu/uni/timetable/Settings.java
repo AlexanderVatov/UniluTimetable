@@ -17,10 +17,12 @@ public class Settings {
     public static final String PREFERENCE_FILE = "PREFERENCE_FILE";
     public static final String ENCRYPTED_PREFERENCE_FILE = "ENCRYPTED_PREFERENCE_FILE";
 
+    public static final String VISIBLE_DAYS_LANDSCAPE = "VISIBLE_DAYS_LANDSCAPE";
+    public static final String VISIBLE_DAYS_PORTRAIT = "VISIBLE_DAYS_PORTRAIT";
     public static final String MAIN_UPDATE_NEEDED = "MAIN_UPDATE_NEEDED";
     public static final String USER_LOGGED_IN = "USER_LOGGED_IN";
-    public static final String USERNAME = "USERNAME";
-    public static final String PASSWORD = "PASSWORD";
+    public static final String USERNAME = "USERNAME"; //Stored in encryptedPreferences
+    public static final String PASSWORD = "PASSWORD"; //Stored in encryptedPreferences
     public static final String STUDY_PROGRAMS = "STUDY_PROGRAMS";
 
 

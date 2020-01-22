@@ -50,7 +50,9 @@ public class TimetableFragment
 
         parentView = inflater.inflate(R.layout.timetable_fragment, container, false);
         weekView = parentView.findViewById(R.id.weekView);
-        weekView.goToHour(8);
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        if(7 <= hour && hour <= 19) weekView.goToCurrentTime();
+        else weekView.goToHour(8);
         weekView.setOnLoadMoreListener(this);
         weekView.setOnEventClickListener(this);
 
@@ -115,7 +117,12 @@ public class TimetableFragment
 
     @Override
     public void onLoadMore(Calendar startCalendar, Calendar endCalendar) {
-        System.err.println("Asked for events between " + startCalendar.getTime() + " and " + endCalendar.getTime());
+        //Retain the end date, but set the time to 23:59:59
+        //(otherwise it defaults to 00:00:00, so events on the last day of the month are not fetched)
+        endCalendar.set(Calendar.HOUR_OF_DAY, 23);
+        endCalendar.set(Calendar.MINUTE, 59);
+        endCalendar.set(Calendar.SECOND, 59);
+        System.err.println("Asked for events between " + startCalendar.getTime() + " and (corrected) " + endCalendar.getTime());
         presenter.requestEvents(new WeakReference<Presenter.Observer>(this), startCalendar.getTime(), endCalendar.getTime());
     }
 

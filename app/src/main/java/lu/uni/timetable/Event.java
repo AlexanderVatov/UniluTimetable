@@ -8,10 +8,8 @@ import androidx.room.PrimaryKey;
 import com.alamkanak.weekview.WeekViewDisplayable;
 import com.alamkanak.weekview.WeekViewEvent;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import lu.uni.avatov.guichetetudiant.GEEvent;
 
@@ -22,33 +20,19 @@ public class Event implements WeekViewDisplayable<Event> {
 
     }
 
-    @PrimaryKey
-    @NonNull
-    public String id;
-    @ColumnInfo(name = "start")
-    public Date start;
-    @ColumnInfo(name = "end")
-    public Date end;
-    @ColumnInfo(name = "title")
-    public String title;
-    @ColumnInfo(name = "subject")
-    public String subject;
-    @ColumnInfo(name = "subject_id")
-    public String subjectId;
-    @ColumnInfo(name = "lecturer")
-    public String lecturer;
-    @ColumnInfo(name = "event_type")
-    public String eventType;
-    @ColumnInfo(name = "is_canceled")
-    public boolean isCanceled;
-    @ColumnInfo(name = "room")
-    public String room;
-    @ColumnInfo(name = "main_program_id")
-    public String mainStudyProgramId;
-    @ColumnInfo(name = "time_added")
-    public Date timeAdded;
-    @ColumnInfo(name = "calendar_id")
-    public Long calendarId;
+    @PrimaryKey @NonNull                  public String id;
+    @ColumnInfo(name = "start")           public Date start;
+    @ColumnInfo(name = "end")             public Date end;
+    @ColumnInfo(name = "title")           public String title;
+    @ColumnInfo(name = "subject")         public String subject;
+    @ColumnInfo(name = "subject_id")      public String subjectId;
+    @ColumnInfo(name = "lecturer")        public String lecturer;
+    @ColumnInfo(name = "event_type")      public String eventType;
+    @ColumnInfo(name = "is_canceled")     public boolean isCanceled;
+    @ColumnInfo(name = "room")            public String room;
+    @ColumnInfo(name = "main_program_id") public String mainStudyProgramId;
+    @ColumnInfo(name = "time_added")      public Date timeAdded;
+    @ColumnInfo(name = "calendar_id")     public Long calendarId;
 
 
     public Event(GEEvent e) {
@@ -88,12 +72,6 @@ public class Event implements WeekViewDisplayable<Event> {
                 //.setStyle(style)
                 .build();
 
-    }
-
-    public static ArrayList<Event> convertGEEventList(List<GEEvent> in) {
-        ArrayList<Event> out = new ArrayList<Event>(in.size());
-        for (GEEvent g : in) out.add(new Event(g));
-        return out;
     }
 
 }

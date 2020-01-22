@@ -23,7 +23,6 @@
         app:nowLineDotRadius="3dp"
         app:numberOfVisibleDays="3"
         app:restoreNumberOfVisibleDays="false"
-        app:showCurrentTimeFirst="true"
         app:showDistinctWeekendColor="true"
         app:showHourSeparator="true"
         app:showNowLine="true"
