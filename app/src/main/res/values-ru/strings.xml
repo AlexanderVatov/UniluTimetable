@@ -29,4 +29,5 @@
     <string name="login_failed">Вход провалился!</string>
     <string name="widget_press_for_login">"Нажмите здесь для входа "</string>
     <string name="widget_done_for_today">Конец пар на сегодня</string>
+    <string name="activity_map">Карта</string>
 </resources>

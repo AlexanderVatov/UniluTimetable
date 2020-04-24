@@ -29,4 +29,5 @@
     <string name="login_failed">Accesso fallito</string>
     <string name="widget_press_for_login">Premere per accedere</string>
     <string name="widget_done_for_today">Fine delle lezioni per oggi</string>
+    <string name="activity_map">Mappa</string>
 </resources>

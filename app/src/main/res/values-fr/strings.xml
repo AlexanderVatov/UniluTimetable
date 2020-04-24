@@ -29,4 +29,5 @@
     <string name="login_failed">Connexion échouée</string>
     <string name="widget_press_for_login">Appuyez pour se connecter</string>
     <string name="widget_done_for_today">Plus de cours aujourd\'hui</string>
+    <string name="activity_map">Carte</string>
 </resources>

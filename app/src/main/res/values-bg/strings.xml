@@ -29,4 +29,5 @@
     <string name="login_failed">Входът се провали</string>
     <string name="widget_press_for_login">Натиснете за да влезете</string>
     <string name="widget_done_for_today">Няма повече уроци днес</string>
+    <string name="activity_map">Карта</string>
 </resources>
